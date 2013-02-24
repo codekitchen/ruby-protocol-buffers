@@ -14,7 +14,7 @@ module ProtocolBuffers
         wire_type = tag_int & 0b111
         field = fields[tag]
 
-        if field && wire_type != field.wire_type
+        if field && ( !( field.packed? || wire_type == field.wire_type ) || ( field.packed? && wire_type != 2 ) )
           raise(DecodeError, "incorrect wire type for tag: #{field.tag}, expected #{field.wire_type} but got #{wire_type}\n#{field.inspect}")
         end
 
@@ -39,7 +39,23 @@ module ProtocolBuffers
 
         if field
           begin
-            deserialized = field.deserialize(value)
+            if field.packed?
+              deserialized = []
+              until value.eof?
+
+                decoded = case field.wire_type
+                  when 0 # VARINT
+                    Varint.decode(value)
+                  when 1 # FIXED64
+                    value.read(8)
+                  when 5 # FIXED32
+                    value.read(4)
+                  end
+                deserialized << field.deserialize(decoded)
+              end
+            else
+              deserialized = field.deserialize(value)
+            end
             # merge_field handles repeated field logic
             message.merge_field(tag, deserialized, field)
           rescue ArgumentError

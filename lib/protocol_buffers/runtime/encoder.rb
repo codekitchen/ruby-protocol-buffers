@@ -20,8 +20,20 @@ module ProtocolBuffers
         tag = (field.tag << 3) | wire_type
 
         if field.repeated?
-          value.each { |i| serialize_field(io, tag, wire_type,
-                                           field.serialize(i)) }
+          next if value.size == 0
+
+          if field.packed?
+            # encode packed field in a LENGTH_DELIMITED wire
+            wire_type = 2
+            tag = (field.tag << 3) | wire_type
+            buf = StringIO.new
+            value.each { |i| serialize_field_value(buf, field.wire_type, field.serialize(i)) }
+            Varint.encode(io, tag)
+            Varint.encode(io, buf.size)
+            io.write(buf.string)
+          else
+            value.each { |i| serialize_field(io, tag, wire_type, field.serialize(i)) }
+          end
         else
           serialize_field(io, tag, wire_type, field.serialize(value))
         end
@@ -36,7 +48,10 @@ module ProtocolBuffers
     def self.serialize_field(io, tag, wire_type, serialized)
       # write the tag
       Varint.encode(io, tag)
+      self.serialize_field_value(io, wire_type, serialized)
+    end
 
+    def self.serialize_field_value(io, wire_type, serialized)
       # see comment in decoder.rb about magic numbers
       case wire_type
       when 0 # VARINT

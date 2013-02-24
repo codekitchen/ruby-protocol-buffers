@@ -97,6 +97,7 @@ module ProtocolBuffers
     attr_reader :otype, :name, :tag
 
     def repeated?; otype == :repeated end
+    def packed?; repeated? && @opts[:packed] end
 
     def self.create(sender, otype, type, name, tag, opts = {})
       if type.is_a?(Symbol)

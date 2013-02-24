@@ -8,8 +8,86 @@ require 'protocol_buffers/compiler'
 
 describe ProtocolBuffers, "runtime" do
   before(:each) do
-    load File.join(File.dirname(__FILE__), "proto_files", "simple.pb.rb")
-    load File.join(File.dirname(__FILE__), "proto_files", "featureful.pb.rb")
+    # clear our namespaces
+    %w( Simple Featureful Foo Packed TehUnknown TehUnknown2 TehUnknown3 ).each do |klass|
+      Object.send(:remove_const, klass.to_sym) if Object.const_defined?(klass.to_sym)
+    end
+
+    # load test protos
+    %w( simple featureful packed ).each do |proto|
+      load File.join(File.dirname(__FILE__), "proto_files", "#{proto}.pb.rb")
+    end
+  end
+
+  context "packed field handling" do
+
+    before :each do
+      @packed = Packed::Test.new
+    end
+
+    it "does not encode empty field" do
+      @packed.a = [ ]
+      @packed.to_s.should == ""
+
+      ser = ProtocolBuffers.bin_sio(@packed.to_s)
+      unpacked = Packed::Test.parse(ser)
+      unpacked.a.should == [ ]
+    end
+
+    it "correctly encodes repeated field" do
+      # Example values from https://developers.google.com/protocol-buffers/docs/encoding.
+      @packed.a  = [ 3, 270 ]
+      @packed.a << 86942
+      @packed.to_s.should == "\x22\x06\x03\x8e\x02\x9e\xa7\x05"
+
+      ser = ProtocolBuffers.bin_sio(@packed.to_s)
+      unpacked = Packed::Test.parse(ser)
+      unpacked.a.should == [ 3, 270, 86942 ]
+    end
+
+    it "handles primitive numeric data types" do
+      types_to_be_packed = {
+        :int32    => { :field => :a, :value => [ 0, 1, 1 ] },
+        :int64    => { :field => :b, :value => [ 2, 3, 5 ] },
+
+        :uint32   => { :field => :c, :value => [ 8, 13, 21 ] },
+        :uint64   => { :field => :d, :value => [ 34, 55, 89 ] },
+
+        :sint32   => { :field => :e, :value => [ -114, 233, -377 ] },
+        :sint64   => { :field => :f, :value => [ 610, -987, 1597 ] },
+
+        :fixed64  => { :field => :g, :value => [ 2584, 4181, 6765 ] },
+        :sfixed64 => { :field => :h, :value => [ -10946, 17711, -28657 ] },
+        :double   => { :field => :i, :value => [ 46.368, -75025, 121.393 ] },
+
+        :fixed32  => { :field => :j, :value => [ 196418, 317811, 514229 ] },
+        :sfixed32 => { :field => :k, :value => [ -832040, 1346269, -2178309 ] },
+        :float    => { :field => :l, :value => [ 3524.578, -5702887, 92274.65 ] },
+
+        :bool     => { :field => :m, :value => [ false, false, true, false ] },
+        :enum     => { :field => :n, :value => [ Packed::Test::N::A, Packed::Test::N::B, Packed::Test::N::A, Packed::Test::N::C ] }
+      }
+
+      types_to_be_packed.values.each do |v|
+        @packed.send("#{v[:field]}=", v[:value])
+      end
+
+      ser = ProtocolBuffers.bin_sio(@packed.to_s)
+      unpacked = Packed::Test.parse(ser)
+
+      types_to_be_packed.each_pair do |k, v|
+        if [ :float, :double ].include? k
+          act = unpacked.send(v[:field]).map{|i| (i * 100).round}
+          exp = v[:value].map{|i| (i * 100).round}
+
+          act.should == exp
+        else
+          unpacked.send(v[:field]).should == v[:value]
+        end
+      end
+
+    end
+
   end
 
   it "can handle basic operations" do

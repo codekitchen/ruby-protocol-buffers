@@ -8,7 +8,7 @@ class FileDescriptorToRuby < Struct.new(:descriptor)
 
   def initialize(descriptor)
     super
-    @package_modules = descriptor.package_ ? descriptor.package_.split('.') : []
+    @package_modules = descriptor.package ? descriptor.package.split('.') : []
     @ns = []
   end
 
@@ -126,6 +126,12 @@ HEADER
         if field.default_value && field.default_value != ""
           fieldline << %{, :default => #{default_value(field)}}
         end
+
+        # Dont need to check for 'repeated' attribute or type, protoc will take care of this.
+        if field.options.packed
+          fieldline << %{, :packed => true }
+        end
+
         line fieldline
       end
     end
