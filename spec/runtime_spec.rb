@@ -1,3 +1,5 @@
+# encoding: binary
+
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 require 'stringio'
@@ -274,7 +276,7 @@ describe ProtocolBuffers, "runtime" do
 
     foo = Foo::Foo.new
     foo.has_bar?.should == false
-    local_i = foo.bar.i
+    _local_i = foo.bar.i
     foo.has_bar?.should == false
   end
 
