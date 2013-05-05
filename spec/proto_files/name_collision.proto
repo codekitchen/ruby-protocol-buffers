@@ -1,0 +1,9 @@
+package test;
+
+message Field {
+  required string name = 1;
+}
+
+message Message {
+  repeated Field fields = 1;
+}

@@ -385,7 +385,7 @@ describe ProtocolBuffers, "runtime" do
 
     bit2 = Featureful::ABitOfEverything.parse(bit.to_s)
     bit.should == bit2
-    bit.fields.each do |tag, field|
+    bit.message_fields.each do |tag, field|
       bit.value_for_tag(tag).should == bit2.value_for_tag(tag)
     end
   end

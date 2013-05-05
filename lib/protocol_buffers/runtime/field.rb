@@ -126,7 +126,7 @@ module ProtocolBuffers
         klass.class_eval <<-EOF, __FILE__, __LINE__+1
         def #{name}
           unless @#{name}
-            @#{name} = RepeatedField.new(fields[#{tag}])
+            @#{name} = RepeatedField.new(message_fields[#{tag}])
           end
           @#{name}
         end
@@ -159,7 +159,7 @@ module ProtocolBuffers
       else
         klass.class_eval <<-EOF, __FILE__, __LINE__+1
           def #{name}=(value)
-            field = fields[#{tag}]
+            field = message_fields[#{tag}]
             if value.nil?
               @set_fields[#{tag}] = false
               @#{name} = field.default_value
