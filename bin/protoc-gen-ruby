@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'protocol_buffers/compiler/file_descriptor_to_ruby'
+require 'protocol_buffers/compiler/plugin.pb'
+require 'stringio'
+
+response = CodeGeneratorResponse.new
+begin
+  request = CodeGeneratorRequest.parse($stdin)
+
+  request.proto_file.each do |file_descriptor|
+    next unless request.file_to_generate.include? file_descriptor.name
+    dumper = FileDescriptorToRuby.new(file_descriptor)
+    io = StringIO.new
+    dumper.write(io)
+    filename = File.join(File.dirname(file_descriptor.name),
+                         File.basename(file_descriptor.name, '.proto') + '.pb.rb')
+    file = CodeGeneratorResponse::File.new(:name => filename, :content => io.string)
+    response.file << file
+  end
+rescue => error
+  response.file.clear
+  response.error = "%s\n%s\n\nBacktrace:\n%s" % [
+    "Failed to generate a Ruby file",
+    error.message,
+    error.backtrace.join("\n")
+  ]
+  $stderr.puts response.error
+else
+  print response.to_s
+end
