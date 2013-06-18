@@ -1,0 +1,5 @@
+package nested.child;
+
+message Child {
+  optional string test_field = 1;
+};

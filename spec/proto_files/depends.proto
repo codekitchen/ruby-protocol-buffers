@@ -1,5 +1,8 @@
 package depends;
 
 import "simple.proto";
+import "nested/child.proto";
 
-message Depends {}
+message Depends {
+  optional nested.child.Child child_field = 1;
+}

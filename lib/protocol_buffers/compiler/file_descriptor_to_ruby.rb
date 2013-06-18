@@ -24,7 +24,13 @@ require 'protocol_buffers'
 HEADER
 
     descriptor.dependency.each do |dep|
-      path = File.basename(dep, ".proto") + ".pb"
+      dir      = File.dirname(dep)
+      filename = File.basename(dep, ".proto") + ".pb"
+      path = if dir == '.'
+        filename
+      else
+        File.join(dir, filename)
+      end
       @io.write("begin; require '#{path}'; rescue LoadError; end\n")
     end
     @io.write("\n") unless descriptor.dependency.empty?
