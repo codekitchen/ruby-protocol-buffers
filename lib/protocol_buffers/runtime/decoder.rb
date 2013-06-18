@@ -12,6 +12,7 @@ module ProtocolBuffers
         tag_int = Varint.decode(io)
         tag = tag_int >> 3
         wire_type = tag_int & 0b111
+        break if wire_type == 4
         field = fields[tag]
 
         if field && ( !( field.packed? || wire_type == field.wire_type ) || ( field.packed? && wire_type != 2 ) )
@@ -31,8 +32,10 @@ module ProtocolBuffers
           value = LimitedIO.new(io, length)
         when 5 # FIXED32
           value = io.read(4)
-        when 3, 4 # deprecated START_GROUP/END_GROUP types
-          raise(DecodeError, "groups are deprecated and unsupported")
+        when 3 # START_GROUP
+          value = io
+        when 4 # END_GROUP
+          break
         else
           raise(DecodeError, "unknown wire type: #{wire_type}")
         end

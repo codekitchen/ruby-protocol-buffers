@@ -20,6 +20,9 @@ module Featureful
   class A < ::ProtocolBuffers::Message
     # forward declarations
     class Sub < ::ProtocolBuffers::Message; end
+    class Group1 < ::ProtocolBuffers::Message; end
+    class Group2 < ::ProtocolBuffers::Message; end
+    class Group3 < ::ProtocolBuffers::Message; end
 
     # nested messages
     class Sub < ::ProtocolBuffers::Message
@@ -43,12 +46,54 @@ module Featureful
       optional ::Featureful::A::Sub::SubSub, :subsub1, 3
     end
 
+    class Group1 < ::ProtocolBuffers::Message
+      # forward declarations
+      class Subgroup < ::ProtocolBuffers::Message; end
+
+      # nested messages
+      class Subgroup < ::ProtocolBuffers::Message
+        required :int32, :i1, 1
+      end
+
+      required :int32, :i1, 1
+      repeated ::Featureful::A::Group1::Subgroup, :subgroup, 2, :group => true
+    end
+
+    class Group2 < ::ProtocolBuffers::Message
+      # forward declarations
+      class Subgroup < ::ProtocolBuffers::Message; end
+
+      # nested messages
+      class Subgroup < ::ProtocolBuffers::Message
+        required :int32, :i1, 1
+      end
+
+      required :int32, :i1, 1
+      repeated ::Featureful::A::Group2::Subgroup, :subgroup, 2, :group => true
+    end
+
+    class Group3 < ::ProtocolBuffers::Message
+      # forward declarations
+      class Subgroup < ::ProtocolBuffers::Message; end
+
+      # nested messages
+      class Subgroup < ::ProtocolBuffers::Message
+        required :int32, :i1, 1
+      end
+
+      required :int32, :i1, 1
+      repeated ::Featureful::A::Group3::Subgroup, :subgroup, 2, :group => true
+    end
+
     repeated :int32, :i1, 1
     optional :int32, :i2, 2
     required :int32, :i3, 3
     repeated ::Featureful::A::Sub, :sub1, 4
     optional ::Featureful::A::Sub, :sub2, 5
     required ::Featureful::A::Sub, :sub3, 6
+    repeated ::Featureful::A::Group1, :group1, 7, :group => true
+    optional ::Featureful::A::Group2, :group2, 8, :group => true
+    required ::Featureful::A::Group3, :group3, 9, :group => true
   end
 
   class B < ::ProtocolBuffers::Message

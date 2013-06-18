@@ -123,6 +123,9 @@ HEADER
       message.field.each do |field|
         typename = field_typename(field)
         fieldline = %{#{LABEL_MAPPING[field.label]} #{typename}, :#{field.name}, #{field.number}}
+        if field.type == TYPE_GROUP
+          fieldline << %{, :group => true}
+        end
         if field.default_value && field.default_value != ""
           fieldline << %{, :default => #{default_value(field)}}
         end

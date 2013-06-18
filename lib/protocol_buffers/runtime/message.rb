@@ -498,7 +498,7 @@ module ProtocolBuffers
       field = fields[tag]
       new_value = field.default_value
       self.instance_variable_set("@#{field.name}", new_value)
-      if field.class == Field::MessageField
+      if field.kind_of? Field::AggregateField
         new_value.notify_on_change(self, tag)
       end
       @set_fields[tag] = false

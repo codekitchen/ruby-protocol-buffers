@@ -25,6 +25,25 @@ message A {
   repeated Sub sub1 = 4;
   optional Sub sub2 = 5;
   required Sub sub3 = 6;
+
+  repeated group Group1 = 7 {
+    required int32 i1 = 1;
+    repeated group Subgroup = 2 {
+      required int32 i1 = 1;
+    }
+  }
+  optional group Group2 = 8 {
+    required int32 i1 = 1;
+    repeated group Subgroup = 2 {
+      required int32 i1 = 1;
+    }
+  }
+  required group Group3 = 9 {
+    required int32 i1 = 1;
+    repeated group Subgroup = 2 {
+      required int32 i1 = 1;
+    }
+  }
 };
 
 message B {

@@ -135,6 +135,20 @@ describe ProtocolBuffers, "runtime" do
     a1.has_sub2?.should == true
   end
 
+  it "flags group that have been set" do
+    a1 = Featureful::A.new
+    a1.value_for_tag?(a1.class.field_for_name(:group1).tag).should == true
+    a1.value_for_tag?(a1.class.field_for_name(:group2).tag).should == false
+    a1.value_for_tag?(a1.class.field_for_name(:group3).tag).should == false
+
+    a1.has_group1?.should == true
+    a1.has_group2?.should == false
+    a1.has_group3?.should == false
+
+    a1.group2 = Featureful::A::Group2.new(:i1 => 1)
+    a1.has_group2?.should == true
+  end
+
   describe "#inspect" do
     it "should leave out un-set fields" do
       b1 = Simple::Bar.new
@@ -148,6 +162,10 @@ describe ProtocolBuffers, "runtime" do
     a1 = Featureful::A.new
     a1.has_sub2?.should == false
     a1.sub2.payload = "ohai"
+    a1.has_sub2?.should == true
+
+    a1.has_group2?.should == false
+    a1.group2.i1 = 1
     a1.has_sub2?.should == true
   end
 
@@ -609,6 +627,9 @@ describe ProtocolBuffers, "runtime" do
       f.valid?.should == false
       f.sub3.valid?.should == false
       f.sub3.payload_type = Featureful::A::Sub::Payloads::P1
+      f.valid?.should == false
+      f.group3.valid?.should == false
+      f.group3.i1 = 1
       f.valid?.should == true
       f.sub3.valid?.should == true
     end

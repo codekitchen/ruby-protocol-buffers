@@ -49,6 +49,7 @@ module ProtocolBuffers
       # write the tag
       Varint.encode(io, tag)
       self.serialize_field_value(io, wire_type, serialized)
+      Varint.encode(io, tag & ~3 | 4) if wire_type == 3
     end
 
     def self.serialize_field_value(io, wire_type, serialized)
@@ -61,8 +62,10 @@ module ProtocolBuffers
       when 2 # LENGTH_DELIMITED
         Varint.encode(io, serialized.bytesize)
         io.write(serialized)
-      when 3, 4 # deprecated START_GROUP/END_GROUP types
-        raise(EncodeError, "groups are deprecated and unsupported")
+      when 3 # START_GROUP
+        io.write(serialized)
+      when 4 # END_GROUP: never appear
+        raise(EncodeError, "Unexpected wire type END_GROUP")
       else
         raise(EncodeError, "unknown wire type: #{wire_type}")
       end
