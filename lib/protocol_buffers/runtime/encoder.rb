@@ -12,7 +12,7 @@ module ProtocolBuffers
     def self.encode(io, message)
       message.validate!
 
-      message.fields.each do |tag, field|
+      message.message_fields.each do |tag, field|
         next unless message.value_for_tag?(tag)
 
         value = message.value_for_tag(tag)

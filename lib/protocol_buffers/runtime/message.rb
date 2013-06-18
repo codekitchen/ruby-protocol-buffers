@@ -313,7 +313,7 @@ module ProtocolBuffers
     # Comparison by class and field values.
     def ==(obj)
       return false unless obj.is_a?(self.class)
-      fields.each do |tag, field|
+      message_fields.each do |tag, field|
         return false unless self.__send__(field.name) == obj.__send__(field.name)
       end
       return true
@@ -344,8 +344,14 @@ module ProtocolBuffers
     end
 
     # Returns a hash of { tag => ProtocolBuffers::Field }
-    def fields
+    def message_fields
       self.class.fields
+    end
+
+    # <b>DEPRECATED:</b> Please use <tt>message_fields</tt> instead.
+    def fields
+      warn "[DEPRECATION] `fields` is deprecated.  Please use `message_fields` instead."
+      message_fields
     end
 
     # Find the field for the given attribute name. Returns a
@@ -358,7 +364,7 @@ module ProtocolBuffers
 
     # Equivalent to fields[tag]
     def self.field_for_tag(tag)
-      fields[tag]
+      message_fields[tag]
     end
 
     # Reflection: get the attribute value for the given tag id.
@@ -367,11 +373,11 @@ module ProtocolBuffers
     #   # is equivalent to
     #   message.f1
     def value_for_tag(tag)
-      self.__send__(fields[tag].name)
+      self.__send__(message_fields[tag].name)
     end
 
     def set_value_for_tag(tag, value)
-      self.__send__("#{fields[tag].name}=", value)
+      self.__send__("#{message_fields[tag].name}=", value)
     end
 
     # Reflection: does this Message have the field set?
@@ -386,7 +392,7 @@ module ProtocolBuffers
     def inspect
       ret = ProtocolBuffers.bin_sio
       ret << "#<#{self.class.name}"
-      fields.each do |tag, field|
+      message_fields.each do |tag, field|
         if value_for_tag?(tag)
           value = field.inspect_value(self.__send__(field.name))
         else
@@ -398,7 +404,7 @@ module ProtocolBuffers
       return ret.string
     end
 
-    def merge_field(tag, value, field = fields[tag]) # :nodoc:
+    def merge_field(tag, value, field = message_fields[tag]) # :nodoc:
       if field.repeated?
         if value.is_a?(Array)
           self.__send__("#{field.name}=", self.__send__(field.name) + value)
@@ -495,7 +501,7 @@ module ProtocolBuffers
     protected
 
     def initialize_field(tag)
-      field = fields[tag]
+      field = message_fields[tag]
       new_value = field.default_value
       self.instance_variable_set("@#{field.name}", new_value)
       if field.kind_of? Field::AggregateField

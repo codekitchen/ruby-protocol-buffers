@@ -6,7 +6,7 @@ module ProtocolBuffers
 
   module Decoder # :nodoc: all
     def self.decode(io, message)
-      fields = message.fields
+      fields = message.message_fields
 
       until io.eof?
         tag_int = Varint.decode(io)
