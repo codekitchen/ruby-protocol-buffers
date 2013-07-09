@@ -4,7 +4,9 @@ module ProtocolBuffers
   # for 1.9.2 compatibility
   def self.bin_sio(*args)
     sio = StringIO.new(*args)
-    sio.set_encoding('binary') if sio.respond_to?(:set_encoding)
+    sio.set_encoding('binary') if 
+      sio.respond_to?(:set_encoding) and
+      sio.external_encoding != Encoding::ASCII_8BIT
     sio
   end
 end
