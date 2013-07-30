@@ -151,26 +151,26 @@ module ProtocolBuffers
     def add_writer_to(klass)
       if repeated?
         klass.class_eval <<-EOF, __FILE__, __LINE__+1
-          def #{name}=(value)
-            if value.nil?
+          def #{name}=(__value)
+            if __value.nil?
               #{name}.clear
             else
               #{name}.clear
-              value.each { |i| @#{name}.push i }
+              __value.each { |i| @#{name}.push i }
             end
           end
         EOF
       else
         klass.class_eval <<-EOF, __FILE__, __LINE__+1
-          def #{name}=(value)
+          def #{name}=(__value)
             field = fields[#{tag}]
-            if value.nil?
+            if __value.nil?
               @set_fields[#{tag}] = false
               @#{name} = field.default_value
             else
-              field.check_valid(value)
+              field.check_valid(__value)
               @set_fields[#{tag}] = true
-              @#{name} = value
+              @#{name} = __value
               if @parent_for_notify
                 @parent_for_notify.default_changed(@tag_for_notify)
                 @parent_for_notify = @tag_for_notify = nil
