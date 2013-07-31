@@ -105,13 +105,48 @@ describe ProtocolBuffers, "runtime" do
     msg2.should == msg1
   end
 
+  it "correctly unsets fields" do
+    msg1 = Simple::Test1.new
+    msg1.has_test_field?.should == false
+    msg1.test_field.should == ""
+    msg1.to_s.should == ""
+
+    msg1.test_field = "zomgkittenz"
+    msg1.has_test_field?.should == true
+    msg1.test_field.should == "zomgkittenz"
+    msg1.to_s.should_not == ""
+
+    msg1.test_field = nil
+    msg1.has_test_field?.should == false
+    msg1.test_field.should == ""
+    msg1.to_s.should == ""
+  end
+
   it "doesn't serialize unset fields" do
     msg1 = Simple::Test1.new
+    msg1.has_test_field?.should == false
+    msg1.test_field.should == ""
+    msg1.to_s.should == ""
+
+    msg2 = Simple::Test1.parse(ProtocolBuffers.bin_sio(msg1.to_s))
+    msg2.has_test_field?.should == false
+    msg2.test_field.should == ""
+    msg2.to_s.should == ""
+
+    msg1 = Simple::Test1.new
+    msg1.has_test_field?.should == false
     msg1.test_field.should == ""
     msg1.to_s.should == ""
 
     msg1.test_field = "zomgkittenz"
     msg1.to_s.should_not == ""
+
+    msg1.test_field = nil
+
+    msg2 = Simple::Test1.parse(ProtocolBuffers.bin_sio(msg1.to_s))
+    msg2.has_test_field?.should == false
+    msg2.test_field.should == ""
+    msg2.to_s.should == ""
   end
 
   it "flags values that have been set" do
