@@ -681,4 +681,56 @@ describe ProtocolBuffers, "runtime" do
     msg.i.should == 805059
   end
 
+  it "correctly converts to a hash" do
+    f = Featureful::A.new
+    f.i1 = [1, 2, 3]
+    f.i3 = 4
+    sub11 = Featureful::A::Sub.new
+    sub11.payload = "sub11payload"
+    sub11.payload_type = Featureful::A::Sub::Payloads::P1
+    sub11.subsub1.subsub_payload = "sub11subsubpayload"
+    sub12 = Featureful::A::Sub.new
+    sub12.payload = "sub12payload"
+    sub12.payload_type = Featureful::A::Sub::Payloads::P2
+    sub12.subsub1.subsub_payload = "sub12subsubpayload"
+    f.sub1 = [sub11, sub12]
+    f.sub3.payload = "sub3payload"
+    f.sub3.payload_type = Featureful::A::Sub::Payloads::P1
+    f.sub3.subsub1.subsub_payload = "sub3subsubpayload"
+    f.group3.i1 = 1
+
+    f.valid?.should == true
+    f.to_hash.should == {
+      :i1 => [1, 2, 3],
+      :i3 => 4,
+      :sub1 => [
+        {
+          :payload => "sub11payload",
+          :payload_type => 0,
+          :subsub1 => {
+            :subsub_payload => "sub11subsubpayload"
+          }
+        },
+        {
+          :payload => "sub12payload",
+          :payload_type => 1,
+          :subsub1 => {
+            :subsub_payload => "sub12subsubpayload"
+          }
+        }
+      ],
+      :sub3 => {
+        :payload => "sub3payload",
+        :payload_type => 0,
+        :subsub1 => {
+          :subsub_payload => "sub3subsubpayload"
+        }
+      },
+      :group1 => [],
+      :group3 => {
+        :i1 => 1,
+        :subgroup => []
+      }
+    }
+  end
 end

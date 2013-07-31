@@ -257,6 +257,22 @@ module ProtocolBuffers
     end
     alias_method :to_s, :serialize_to_string
 
+    def to_hash
+      self.class.to_hash(self)
+    end
+
+    def self.to_hash(message)
+      return nil if message == nil
+      return message.is_a?(String) ? message.dup : message unless message.is_a?(::ProtocolBuffers::Message)
+      message.fields.select do |tag, field|
+        message.value_for_tag?(tag)
+      end.inject(Hash.new) do |hash, (tag, field)|
+        value = message.value_for_tag(tag)
+        hash[field.name] = value.is_a?(::ProtocolBuffers::RepeatedField) ? value.map { |elem| to_hash(elem) } : to_hash(value)
+        hash
+      end
+    end
+
     # Parse a Message of this class from the given IO/String. Since Protocol
     # Buffers are not length delimited, this will read until the end of the
     # stream.
