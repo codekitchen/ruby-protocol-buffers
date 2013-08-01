@@ -33,6 +33,19 @@ filenames = rest
 
 (puts "Missing input file.\n\n"; puts opts; exit) if filenames.empty?
 
+def which(cmd)
+  exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+  ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+    exts.each { |ext|
+      exe = File.join(path, "#{cmd}#{ext}")
+      return exe if File.executable? exe
+    }
+  end
+  return nil
+end
+
+(puts "protoc not installed.\n"; exit) unless which("protoc")
+
 protocfile = Tempfile.new("ruby-protoc")
 protocfile.binmode
 ProtocolBuffers::Compiler.compile(protocfile.path, filenames, :include_dirs => include_dirs)
