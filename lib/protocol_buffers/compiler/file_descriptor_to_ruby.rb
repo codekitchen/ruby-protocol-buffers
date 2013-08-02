@@ -121,7 +121,7 @@ HEADER
 
   def dump_message(package, message)
     in_namespace("class", message.name, " < ::ProtocolBuffers::Message") do
-      fully_qualified_name = "#{package}.#{message.name}"
+      fully_qualified_name = fully_qualified_name(package, message.name)
       declare(fully_qualified_name, message.nested_type, message.enum_type)
 
       line %{set_fully_qualified_name "#{fully_qualified_name}"}
@@ -156,7 +156,7 @@ HEADER
       line %{extend ::ProtocolBuffers::Enum}
       line
 
-      line %{set_fully_qualified_name "#{package}.#{enum.name}"}
+      line %{set_fully_qualified_name "#{fully_qualified_name(package, enum.name)}"}
       line
 
       enum.value.each do |value|
@@ -183,6 +183,10 @@ HEADER
     else
       field.default_value
     end
+  end
+
+  def fully_qualified_name(package, name)
+    package == nil || package.empty? ? name : "#{package}.#{name}"
   end
 
   def capfirst(s)
