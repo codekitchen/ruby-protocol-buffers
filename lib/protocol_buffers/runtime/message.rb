@@ -463,6 +463,18 @@ module ProtocolBuffers
       end
     end
 
+    def self.set_fully_qualified_name(name)
+      @fully_qualified_name = name.dup.freeze
+    end
+
+    def self.fully_qualified_name
+      @fully_qualified_name
+    end
+
+    def fully_qualified_name
+      self.class.fully_qualified_name
+    end
+
     def valid?
       self.class.valid?(self)
     end
