@@ -153,31 +153,15 @@ HEADER
 
   def dump_enum(package, enum)
     in_namespace("module", enum.name) do
-      line %{include ::ProtocolBuffers::Enum}
+      line %{extend ::ProtocolBuffers::Enum}
+      line
+
+      line %{set_fully_qualified_name "#{package}.#{enum.name}"}
+      line
+
       enum.value.each do |value|
         line %{#{capfirst(value.name)} = #{value.number}}
       end
-
-      line
-
-      line %{def self.fully_qualified_name}
-        line %{  @@fully_qualified_name ||= "#{package}.#{enum.name}".freeze}
-        line %{  @@fully_qualified_name}
-      line %{end}
-
-      line
-
-      line %{def self.name_to_value_map}
-        line %{  @@name_to_value_map ||= \{ #{enum.value.map { |value| ":#{capfirst(value.name)} => #{capfirst(value.name)}" }.join(", ")} \}.freeze}
-        line %{  @@name_to_value_map}
-      line %{end}
-
-      line
-
-      line %{def self.value_to_name_map}
-        line %{  @@value_to_name_map ||= \{ #{enum.value.map { |value| "#{capfirst(value.name)} => :#{capfirst(value.name)}" }.join(", ")} \}.freeze}
-        line %{  @@value_to_name_map}
-      line %{end}
     end
     line
   end
