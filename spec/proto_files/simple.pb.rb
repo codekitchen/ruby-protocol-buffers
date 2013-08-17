@@ -10,13 +10,20 @@ module Simple
   class Bar < ::ProtocolBuffers::Message; end
 
   class Test1 < ::ProtocolBuffers::Message
+    set_fully_qualified_name "simple.Test1"
+
     optional :string, :test_field, 1
   end
 
   class Foo < ::ProtocolBuffers::Message
+    set_fully_qualified_name "simple.Foo"
+
   end
 
   class Bar < ::ProtocolBuffers::Message
+    # purposefully removing qualified name to make sure that nothing breaks
+    #set_fully_qualified_name "simple.Bar"
+
     optional ::Simple::Foo, :foo, 1
   end
 

@@ -13,3 +13,4 @@ end
 
 require 'protocol_buffers/version'
 require 'protocol_buffers/runtime/message'
+require 'protocol_buffers/runtime/enum'

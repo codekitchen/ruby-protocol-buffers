@@ -11,12 +11,12 @@ require 'protocol_buffers/compiler'
 describe ProtocolBuffers, "runtime" do
   before(:each) do
     # clear our namespaces
-    %w( Simple Featureful Foo Packed TehUnknown TehUnknown2 TehUnknown3 ).each do |klass|
+    %w( Simple Featureful Foo Packed TehUnknown TehUnknown2 TehUnknown3 Enums A C).each do |klass|
       Object.send(:remove_const, klass.to_sym) if Object.const_defined?(klass.to_sym)
     end
 
     # load test protos
-    %w( simple featureful packed ).each do |proto|
+    %w( simple featureful packed enums no_package).each do |proto|
       load File.join(File.dirname(__FILE__), "proto_files", "#{proto}.pb.rb")
     end
   end
@@ -732,5 +732,72 @@ describe ProtocolBuffers, "runtime" do
         :subgroup => []
       }
     }
+
   end
+
+  it "correctly handles fully qualified names on Messages" do
+    Simple::Test1.fully_qualified_name.should == "simple.Test1"
+    Simple::Foo.fully_qualified_name.should == "simple.Foo"
+    Simple::Bar.fully_qualified_name.should == nil
+  end
+
+  it "correctly handles fully qualified names on Messages with no package" do
+    A.fully_qualified_name.should == "A"
+    A::B.fully_qualified_name.should == "A.B"
+    C.fully_qualified_name.should == nil
+  end
+
+  it "has only Enum values as constants" do
+    Enums::FooEnum.constants.should =~ [:ONE, :TWO, :THREE]
+    Enums::BarEnum.constants.should =~ [:FOUR, :FIVE, :SIX]
+    Enums::FooMessage::NestedFooEnum.constants.should =~ [:SEVEN, :EIGHT]
+    Enums::FooMessage::NestedBarEnum.constants.should =~ [:NINE, :TEN]
+  end
+
+  it "correctly populates the maps between name and values for Enums" do
+    Enums::FooEnum.value_to_names_map.should == {
+      1 => [:ONE],
+      2 => [:TWO],
+      3 => [:THREE]
+    }
+    Enums::BarEnum.value_to_names_map.should == {
+      4 => [:FOUR],
+      5 => [:FIVE],
+      6 => [:SIX]
+    }
+    Enums::FooEnum.name_to_value_map.should == {
+      :ONE => 1,
+      :TWO => 2,
+      :THREE => 3
+    }
+    Enums::BarEnum.name_to_value_map.should == {
+      :FOUR => 4,
+      :FIVE => 5,
+      :SIX => 6
+    }
+    Enums::FooMessage::NestedFooEnum.value_to_names_map.should == {
+      7 => [:SEVEN],
+      8 => [:EIGHT],
+    }
+    Enums::FooMessage::NestedBarEnum.value_to_names_map.should == {
+      9 => [:NINE],
+      10 => [:TEN],
+    }
+    Enums::FooMessage::NestedFooEnum.name_to_value_map.should == {
+      :SEVEN => 7,
+      :EIGHT => 8,
+    }
+    Enums::FooMessage::NestedBarEnum.name_to_value_map.should == {
+      :NINE => 9,
+      :TEN => 10,
+    }
+  end
+
+  it "correctly handles fully qualified names on Enums" do
+    Enums::FooEnum.fully_qualified_name.should == "enums.FooEnum"
+    Enums::BarEnum.fully_qualified_name.should == nil
+    Enums::FooMessage::NestedFooEnum.fully_qualified_name.should == "enums.FooMessage.NestedFooEnum"
+    Enums::FooMessage::NestedBarEnum.fully_qualified_name.should == nil
+  end
+
 end

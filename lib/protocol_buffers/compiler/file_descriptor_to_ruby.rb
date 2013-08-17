@@ -36,10 +36,10 @@ HEADER
     @io.write("\n") unless descriptor.dependency.empty?
 
     in_namespace("module", @package_modules) do
-      declare(descriptor.message_type, descriptor.enum_type)
+      declare(descriptor.package, descriptor.message_type, descriptor.enum_type)
 
       descriptor.message_type.each do |message|
-        dump_message(message)
+        dump_message(descriptor.package, message)
       end
     end
     
@@ -47,7 +47,7 @@ HEADER
 
   protected
 
-  def declare(messages, enums)
+  def declare(package, messages, enums)
     return if messages.empty? && enums.empty?
 
     line %{# forward declarations}
@@ -61,7 +61,7 @@ HEADER
       line
       line %{# enums}
       enums.each do |enum|
-        dump_enum(enum)
+        dump_enum(package, enum)
       end
     end
   end
@@ -119,12 +119,16 @@ HEADER
     TYPE_SINT64 => ":sint64",
   }
 
-  def dump_message(message)
+  def dump_message(package, message)
     in_namespace("class", message.name, " < ::ProtocolBuffers::Message") do
-      declare(message.nested_type, message.enum_type)
+      fully_qualified_name = fully_qualified_name(package, message.name)
+      declare(fully_qualified_name, message.nested_type, message.enum_type)
+
+      line %{set_fully_qualified_name "#{fully_qualified_name}"}
+      line
 
       line %{# nested messages} unless message.nested_type.empty?
-      message.nested_type.each { |inner| dump_message(inner) }
+      message.nested_type.each { |inner| dump_message(fully_qualified_name, inner) }
 
       message.field.each do |field|
         typename = field_typename(field)
@@ -147,9 +151,14 @@ HEADER
     line
   end
 
-  def dump_enum(enum)
+  def dump_enum(package, enum)
     in_namespace("module", enum.name) do
       line %{include ::ProtocolBuffers::Enum}
+      line
+
+      line %{set_fully_qualified_name "#{fully_qualified_name(package, enum.name)}"}
+      line
+
       enum.value.each do |value|
         line %{#{capfirst(value.name)} = #{value.number}}
       end
@@ -174,6 +183,10 @@ HEADER
     else
       field.default_value
     end
+  end
+
+  def fully_qualified_name(package, name)
+    package == nil || package.empty? ? name : "#{package}.#{name}"
   end
 
   def capfirst(s)

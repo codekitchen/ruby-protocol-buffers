@@ -1,0 +1,26 @@
+package enums;
+
+enum FooEnum {
+  ONE = 1;
+  TWO = 2;
+  THREE = 3;
+}
+
+enum BarEnum {
+  FOUR = 4;
+  FIVE = 5;
+  SIX = 6;
+}
+
+message FooMessage {
+  enum NestedFooEnum {
+    SEVEN = 7;
+    EIGHT = 8;
+  }
+  enum NestedBarEnum {
+    NINE = 9;
+    TEN = 10;
+  }
+  optional NestedFooEnum nested_foo_enum = 1;
+  optional NestedBarEnum nested_bar_enum = 2;
+}
