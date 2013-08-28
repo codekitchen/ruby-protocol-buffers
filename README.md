@@ -143,6 +143,8 @@ end
 * imports
 * nested types
 * passing on unknown fields when re-serializing a message
+* groups
+* RPC stubbing
 
 ### Unsupported Features
 
@@ -152,8 +154,6 @@ end
 
 ### Probably Never to be Supported
 
-* RPC stubbing
-* deprecated protocol features (e.g. groups)
 * the unsupported options (java_*, optimize_for, message_set_wire_format, deprecated)
 
 ## Authors

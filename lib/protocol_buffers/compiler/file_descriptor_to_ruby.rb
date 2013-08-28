@@ -41,6 +41,10 @@ HEADER
       descriptor.message_type.each do |message|
         dump_message(descriptor.package, message)
       end
+
+      descriptor.service.each do |service|
+        dump_service(descriptor.package, service)
+      end
     end
     
   end
@@ -166,8 +170,23 @@ HEADER
     line
   end
 
+  def dump_service(package, service)
+    in_namespace("class", service.name, " < ::ProtocolBuffers::Service") do
+      fully_qualified_name = fully_qualified_name(package, service.name)
+      line %{set_fully_qualified_name "#{fully_qualified_name}"}
+      line
+      service.method.each do |method|
+        line %{rpc :#{underscore(method.name)}, "#{method.name}", #{service_typename(method.input_type)}, #{service_typename(method.output_type)}}
+      end
+    end
+  end
+
   def field_typename(field)
-    TYPE_MAPPING[field.type] || field.type_name.split(".").map { |t| camelize(t) }.join("::")
+    TYPE_MAPPING[field.type] || service_typename(field.type_name)
+  end
+
+  def service_typename(type_name)
+    type_name.split(".").map { |t| camelize(t) }.join("::")
   end
 
   # TODO: this probably doesn't work for all default values, expand
@@ -195,6 +214,17 @@ HEADER
   
   def camelize(lower_case_and_underscored_word)
     lower_case_and_underscored_word.to_s.gsub(/(?:^|_)(.)/) { $1.upcase }
+  end
+
+  def underscore(camelized_word)
+    word = camelized_word.to_s.dup
+    word.gsub!(/::/, '/')
+    word.gsub!(/(?:([A-Za-z\d])|^)((?=\a)\b)(?=\b|[^a-z])/) { "#{$1}#{$1 && '_'}#{$2.downcase}" }
+    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/,'\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
   end
 
 end
