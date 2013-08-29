@@ -36,7 +36,7 @@ filenames = rest
 protocfile = Tempfile.new("ruby-protoc")
 protocfile.binmode
 ProtocolBuffers::Compiler.compile(protocfile.path, filenames, :include_dirs => include_dirs)
-descriptor_set = FileDescriptorSet.parse(protocfile)
+descriptor_set = Google::Protobuf::FileDescriptorSet.parse(protocfile)
 protocfile.close(true)
 
 if ruby_out

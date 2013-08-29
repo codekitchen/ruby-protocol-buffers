@@ -3,8 +3,8 @@ require 'stringio'
 
 class FileDescriptorToD < Struct.new(:descriptor)
 
-  include FieldDescriptorProto::Type
-  include FieldDescriptorProto::Label
+  include Google::Protobuf::FieldDescriptorProto::Type
+  include Google::Protobuf::FieldDescriptorProto::Label
 
   def initialize(descriptor)
     super

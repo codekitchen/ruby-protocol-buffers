@@ -29,7 +29,7 @@ module ProtocolBuffers
       include_dirs.concat(input_files.map { |i| File.dirname(i) }.uniq)
 
       compile(tempfile.path, input_files, opts)
-      descriptor_set = FileDescriptorSet.parse(tempfile)
+      descriptor_set = Google::Protobuf::FileDescriptorSet.parse(tempfile)
       tempfile.close(true)
       descriptor_set.file.each do |file|
         parsed = FileDescriptorToRuby.new(file)

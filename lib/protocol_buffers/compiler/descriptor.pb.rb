@@ -3,267 +3,283 @@
 
 require 'protocol_buffers'
 
-# forward declarations
-class FileDescriptorSet < ::ProtocolBuffers::Message; end
-class FileDescriptorProto < ::ProtocolBuffers::Message; end
-class DescriptorProto < ::ProtocolBuffers::Message; end
-class FieldDescriptorProto < ::ProtocolBuffers::Message; end
-class EnumDescriptorProto < ::ProtocolBuffers::Message; end
-class EnumValueDescriptorProto < ::ProtocolBuffers::Message; end
-class ServiceDescriptorProto < ::ProtocolBuffers::Message; end
-class MethodDescriptorProto < ::ProtocolBuffers::Message; end
-class FileOptions < ::ProtocolBuffers::Message; end
-class MessageOptions < ::ProtocolBuffers::Message; end
-class FieldOptions < ::ProtocolBuffers::Message; end
-class EnumOptions < ::ProtocolBuffers::Message; end
-class EnumValueOptions < ::ProtocolBuffers::Message; end
-class ServiceOptions < ::ProtocolBuffers::Message; end
-class MethodOptions < ::ProtocolBuffers::Message; end
-class UninterpretedOption < ::ProtocolBuffers::Message; end
-class SourceCodeInfo < ::ProtocolBuffers::Message; end
+module Google
+  module Protobuf
+    # forward declarations
+    class FileDescriptorSet < ::ProtocolBuffers::Message; end
+    class FileDescriptorProto < ::ProtocolBuffers::Message; end
+    class DescriptorProto < ::ProtocolBuffers::Message; end
+    class FieldDescriptorProto < ::ProtocolBuffers::Message; end
+    class EnumDescriptorProto < ::ProtocolBuffers::Message; end
+    class EnumValueDescriptorProto < ::ProtocolBuffers::Message; end
+    class ServiceDescriptorProto < ::ProtocolBuffers::Message; end
+    class MethodDescriptorProto < ::ProtocolBuffers::Message; end
+    class FileOptions < ::ProtocolBuffers::Message; end
+    class MessageOptions < ::ProtocolBuffers::Message; end
+    class FieldOptions < ::ProtocolBuffers::Message; end
+    class EnumOptions < ::ProtocolBuffers::Message; end
+    class EnumValueOptions < ::ProtocolBuffers::Message; end
+    class ServiceOptions < ::ProtocolBuffers::Message; end
+    class MethodOptions < ::ProtocolBuffers::Message; end
+    class UninterpretedOption < ::ProtocolBuffers::Message; end
+    class SourceCodeInfo < ::ProtocolBuffers::Message; end
 
-class FileDescriptorSet < ::ProtocolBuffers::Message
-  repeated ::FileDescriptorProto, :file, 1
+    class FileDescriptorSet < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.FileDescriptorSet"
 
-  gen_methods! # new fields ignored after this point
-end
+      repeated ::Google::Protobuf::FileDescriptorProto, :file, 1
+    end
 
-class FileDescriptorProto < ::ProtocolBuffers::Message
-  optional :string, :name, 1
-  optional :string, :package, 2
-  repeated :string, :dependency, 3
-  repeated :int32, :public_dependency, 10
-  repeated :int32, :weak_dependency, 11
-  repeated ::DescriptorProto, :message_type, 4
-  repeated ::EnumDescriptorProto, :enum_type, 5
-  repeated ::ServiceDescriptorProto, :service, 6
-  repeated ::FieldDescriptorProto, :extension, 7
-  optional ::FileOptions, :options, 8
-  optional ::SourceCodeInfo, :source_code_info, 9
+    class FileDescriptorProto < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.FileDescriptorProto"
 
-  gen_methods! # new fields ignored after this point
-end
+      optional :string, :name, 1
+      optional :string, :package, 2
+      repeated :string, :dependency, 3
+      repeated :int32, :public_dependency, 10
+      repeated :int32, :weak_dependency, 11
+      repeated ::Google::Protobuf::DescriptorProto, :message_type, 4
+      repeated ::Google::Protobuf::EnumDescriptorProto, :enum_type, 5
+      repeated ::Google::Protobuf::ServiceDescriptorProto, :service, 6
+      repeated ::Google::Protobuf::FieldDescriptorProto, :extension, 7
+      optional ::Google::Protobuf::FileOptions, :options, 8
+      optional ::Google::Protobuf::SourceCodeInfo, :source_code_info, 9
+    end
 
-class DescriptorProto < ::ProtocolBuffers::Message
-  # forward declarations
-  class ExtensionRange < ::ProtocolBuffers::Message; end
+    class DescriptorProto < ::ProtocolBuffers::Message
+      # forward declarations
+      class ExtensionRange < ::ProtocolBuffers::Message; end
 
-  # nested messages
-  class ExtensionRange < ::ProtocolBuffers::Message
-    optional :int32, :start, 1
-    optional :int32, :end, 2
+      set_fully_qualified_name "google.protobuf.DescriptorProto"
 
-    gen_methods! # new fields ignored after this point
+      # nested messages
+      class ExtensionRange < ::ProtocolBuffers::Message
+        set_fully_qualified_name "google.protobuf.DescriptorProto.ExtensionRange"
+
+        optional :int32, :start, 1
+        optional :int32, :end, 2
+      end
+
+      optional :string, :name, 1
+      repeated ::Google::Protobuf::FieldDescriptorProto, :field, 2
+      repeated ::Google::Protobuf::FieldDescriptorProto, :extension, 6
+      repeated ::Google::Protobuf::DescriptorProto, :nested_type, 3
+      repeated ::Google::Protobuf::EnumDescriptorProto, :enum_type, 4
+      repeated ::Google::Protobuf::DescriptorProto::ExtensionRange, :extension_range, 5
+      optional ::Google::Protobuf::MessageOptions, :options, 7
+    end
+
+    class FieldDescriptorProto < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module Type
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "google.protobuf.FieldDescriptorProto.Type"
+
+        TYPE_DOUBLE = 1
+        TYPE_FLOAT = 2
+        TYPE_INT64 = 3
+        TYPE_UINT64 = 4
+        TYPE_INT32 = 5
+        TYPE_FIXED64 = 6
+        TYPE_FIXED32 = 7
+        TYPE_BOOL = 8
+        TYPE_STRING = 9
+        TYPE_GROUP = 10
+        TYPE_MESSAGE = 11
+        TYPE_BYTES = 12
+        TYPE_UINT32 = 13
+        TYPE_ENUM = 14
+        TYPE_SFIXED32 = 15
+        TYPE_SFIXED64 = 16
+        TYPE_SINT32 = 17
+        TYPE_SINT64 = 18
+      end
+
+      module Label
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "google.protobuf.FieldDescriptorProto.Label"
+
+        LABEL_OPTIONAL = 1
+        LABEL_REQUIRED = 2
+        LABEL_REPEATED = 3
+      end
+
+      set_fully_qualified_name "google.protobuf.FieldDescriptorProto"
+
+      optional :string, :name, 1
+      optional :int32, :number, 3
+      optional ::Google::Protobuf::FieldDescriptorProto::Label, :label, 4
+      optional ::Google::Protobuf::FieldDescriptorProto::Type, :type, 5
+      optional :string, :type_name, 6
+      optional :string, :extendee, 2
+      optional :string, :default_value, 7
+      optional ::Google::Protobuf::FieldOptions, :options, 8
+    end
+
+    class EnumDescriptorProto < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.EnumDescriptorProto"
+
+      optional :string, :name, 1
+      repeated ::Google::Protobuf::EnumValueDescriptorProto, :value, 2
+      optional ::Google::Protobuf::EnumOptions, :options, 3
+    end
+
+    class EnumValueDescriptorProto < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.EnumValueDescriptorProto"
+
+      optional :string, :name, 1
+      optional :int32, :number, 2
+      optional ::Google::Protobuf::EnumValueOptions, :options, 3
+    end
+
+    class ServiceDescriptorProto < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.ServiceDescriptorProto"
+
+      optional :string, :name, 1
+      repeated ::Google::Protobuf::MethodDescriptorProto, :method, 2
+      optional ::Google::Protobuf::ServiceOptions, :options, 3
+    end
+
+    class MethodDescriptorProto < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.MethodDescriptorProto"
+
+      optional :string, :name, 1
+      optional :string, :input_type, 2
+      optional :string, :output_type, 3
+      optional ::Google::Protobuf::MethodOptions, :options, 4
+    end
+
+    class FileOptions < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module OptimizeMode
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "google.protobuf.FileOptions.OptimizeMode"
+
+        SPEED = 1
+        CODE_SIZE = 2
+        LITE_RUNTIME = 3
+      end
+
+      set_fully_qualified_name "google.protobuf.FileOptions"
+
+      optional :string, :java_package, 1
+      optional :string, :java_outer_classname, 8
+      optional :bool, :java_multiple_files, 10, :default => false
+      optional :bool, :java_generate_equals_and_hash, 20, :default => false
+      optional ::Google::Protobuf::FileOptions::OptimizeMode, :optimize_for, 9, :default => ::Google::Protobuf::FileOptions::OptimizeMode::SPEED
+      optional :string, :go_package, 11
+      optional :bool, :cc_generic_services, 16, :default => false
+      optional :bool, :java_generic_services, 17, :default => false
+      optional :bool, :py_generic_services, 18, :default => false
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class MessageOptions < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.MessageOptions"
+
+      optional :bool, :message_set_wire_format, 1, :default => false
+      optional :bool, :no_standard_descriptor_accessor, 2, :default => false
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class FieldOptions < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module CType
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "google.protobuf.FieldOptions.CType"
+
+        STRING = 0
+        CORD = 1
+        STRING_PIECE = 2
+      end
+
+      set_fully_qualified_name "google.protobuf.FieldOptions"
+
+      optional ::Google::Protobuf::FieldOptions::CType, :ctype, 1, :default => ::Google::Protobuf::FieldOptions::CType::STRING
+      optional :bool, :packed, 2
+      optional :bool, :lazy, 5, :default => false
+      optional :bool, :deprecated, 3, :default => false
+      optional :string, :experimental_map_key, 9
+      optional :bool, :weak, 10, :default => false
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class EnumOptions < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.EnumOptions"
+
+      optional :bool, :allow_alias, 2, :default => true
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class EnumValueOptions < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.EnumValueOptions"
+
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class ServiceOptions < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.ServiceOptions"
+
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class MethodOptions < ::ProtocolBuffers::Message
+      set_fully_qualified_name "google.protobuf.MethodOptions"
+
+      repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
+    end
+
+    class UninterpretedOption < ::ProtocolBuffers::Message
+      # forward declarations
+      class NamePart < ::ProtocolBuffers::Message; end
+
+      set_fully_qualified_name "google.protobuf.UninterpretedOption"
+
+      # nested messages
+      class NamePart < ::ProtocolBuffers::Message
+        set_fully_qualified_name "google.protobuf.UninterpretedOption.NamePart"
+
+        required :string, :name_part, 1
+        required :bool, :is_extension, 2
+      end
+
+      repeated ::Google::Protobuf::UninterpretedOption::NamePart, :name, 2
+      optional :string, :identifier_value, 3
+      optional :uint64, :positive_int_value, 4
+      optional :int64, :negative_int_value, 5
+      optional :double, :double_value, 6
+      optional :bytes, :string_value, 7
+      optional :string, :aggregate_value, 8
+    end
+
+    class SourceCodeInfo < ::ProtocolBuffers::Message
+      # forward declarations
+      class Location < ::ProtocolBuffers::Message; end
+
+      set_fully_qualified_name "google.protobuf.SourceCodeInfo"
+
+      # nested messages
+      class Location < ::ProtocolBuffers::Message
+        set_fully_qualified_name "google.protobuf.SourceCodeInfo.Location"
+
+        repeated :int32, :path, 1, :packed => true 
+        repeated :int32, :span, 2, :packed => true 
+        optional :string, :leading_comments, 3
+        optional :string, :trailing_comments, 4
+      end
+
+      repeated ::Google::Protobuf::SourceCodeInfo::Location, :location, 1
+    end
+
   end
-
-  optional :string, :name, 1
-  repeated ::FieldDescriptorProto, :field, 2
-  repeated ::FieldDescriptorProto, :extension, 6
-  repeated ::DescriptorProto, :nested_type, 3
-  repeated ::EnumDescriptorProto, :enum_type, 4
-  repeated ::DescriptorProto::ExtensionRange, :extension_range, 5
-  optional ::MessageOptions, :options, 7
-
-  gen_methods! # new fields ignored after this point
 end
-
-class FieldDescriptorProto < ::ProtocolBuffers::Message
-  # forward declarations
-
-  # enums
-  module Type
-    include ::ProtocolBuffers::Enum
-    TYPE_DOUBLE = 1
-    TYPE_FLOAT = 2
-    TYPE_INT64 = 3
-    TYPE_UINT64 = 4
-    TYPE_INT32 = 5
-    TYPE_FIXED64 = 6
-    TYPE_FIXED32 = 7
-    TYPE_BOOL = 8
-    TYPE_STRING = 9
-    TYPE_GROUP = 10
-    TYPE_MESSAGE = 11
-    TYPE_BYTES = 12
-    TYPE_UINT32 = 13
-    TYPE_ENUM = 14
-    TYPE_SFIXED32 = 15
-    TYPE_SFIXED64 = 16
-    TYPE_SINT32 = 17
-    TYPE_SINT64 = 18
-  end
-
-  module Label
-    include ::ProtocolBuffers::Enum
-    LABEL_OPTIONAL = 1
-    LABEL_REQUIRED = 2
-    LABEL_REPEATED = 3
-  end
-
-  optional :string, :name, 1
-  optional :int32, :number, 3
-  optional ::FieldDescriptorProto::Label, :label, 4
-  optional ::FieldDescriptorProto::Type, :type, 5
-  optional :string, :type_name, 6
-  optional :string, :extendee, 2
-  optional :string, :default_value, 7
-  optional ::FieldOptions, :options, 8
-
-  gen_methods! # new fields ignored after this point
-end
-
-class EnumDescriptorProto < ::ProtocolBuffers::Message
-  optional :string, :name, 1
-  repeated ::EnumValueDescriptorProto, :value, 2
-  optional ::EnumOptions, :options, 3
-
-  gen_methods! # new fields ignored after this point
-end
-
-class EnumValueDescriptorProto < ::ProtocolBuffers::Message
-  optional :string, :name, 1
-  optional :int32, :number, 2
-  optional ::EnumValueOptions, :options, 3
-
-  gen_methods! # new fields ignored after this point
-end
-
-class ServiceDescriptorProto < ::ProtocolBuffers::Message
-  optional :string, :name, 1
-  repeated ::MethodDescriptorProto, :method, 2
-  optional ::ServiceOptions, :options, 3
-
-  gen_methods! # new fields ignored after this point
-end
-
-class MethodDescriptorProto < ::ProtocolBuffers::Message
-  optional :string, :name, 1
-  optional :string, :input_type, 2
-  optional :string, :output_type, 3
-  optional ::MethodOptions, :options, 4
-
-  gen_methods! # new fields ignored after this point
-end
-
-class FileOptions < ::ProtocolBuffers::Message
-  # forward declarations
-
-  # enums
-  module OptimizeMode
-    include ::ProtocolBuffers::Enum
-    SPEED = 1
-    CODE_SIZE = 2
-    LITE_RUNTIME = 3
-  end
-
-  optional :string, :java_package, 1
-  optional :string, :java_outer_classname, 8
-  optional :bool, :java_multiple_files, 10, :default => false
-  optional :bool, :java_generate_equals_and_hash, 20, :default => false
-  optional ::FileOptions::OptimizeMode, :optimize_for, 9, :default => ::FileOptions::OptimizeMode::SPEED
-  optional :string, :go_package, 11
-  optional :bool, :cc_generic_services, 16, :default => false
-  optional :bool, :java_generic_services, 17, :default => false
-  optional :bool, :py_generic_services, 18, :default => false
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class MessageOptions < ::ProtocolBuffers::Message
-  optional :bool, :message_set_wire_format, 1, :default => false
-  optional :bool, :no_standard_descriptor_accessor, 2, :default => false
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class FieldOptions < ::ProtocolBuffers::Message
-  # forward declarations
-
-  # enums
-  module CType
-    include ::ProtocolBuffers::Enum
-    STRING = 0
-    CORD = 1
-    STRING_PIECE = 2
-  end
-
-  optional ::FieldOptions::CType, :ctype, 1, :default => ::FieldOptions::CType::STRING
-  optional :bool, :packed, 2
-  optional :bool, :lazy, 5, :default => false
-  optional :bool, :deprecated, 3, :default => false
-  optional :string, :experimental_map_key, 9
-  optional :bool, :weak, 10, :default => false
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class EnumOptions < ::ProtocolBuffers::Message
-  optional :bool, :allow_alias, 2, :default => true
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class EnumValueOptions < ::ProtocolBuffers::Message
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class ServiceOptions < ::ProtocolBuffers::Message
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class MethodOptions < ::ProtocolBuffers::Message
-  repeated ::UninterpretedOption, :uninterpreted_option, 999
-
-  gen_methods! # new fields ignored after this point
-end
-
-class UninterpretedOption < ::ProtocolBuffers::Message
-  # forward declarations
-  class NamePart < ::ProtocolBuffers::Message; end
-
-  # nested messages
-  class NamePart < ::ProtocolBuffers::Message
-    required :string, :name_part, 1
-    required :bool, :is_extension, 2
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  repeated ::UninterpretedOption::NamePart, :name, 2
-  optional :string, :identifier_value, 3
-  optional :uint64, :positive_int_value, 4
-  optional :int64, :negative_int_value, 5
-  optional :double, :double_value, 6
-  optional :bytes, :string_value, 7
-  optional :string, :aggregate_value, 8
-
-  gen_methods! # new fields ignored after this point
-end
-
-class SourceCodeInfo < ::ProtocolBuffers::Message
-  # forward declarations
-  class Location < ::ProtocolBuffers::Message; end
-
-  # nested messages
-  class Location < ::ProtocolBuffers::Message
-    repeated :int32, :path, 1
-    repeated :int32, :span, 2
-    optional :string, :leading_comments, 3
-    optional :string, :trailing_comments, 4
-
-    gen_methods! # new fields ignored after this point
-  end
-
-  repeated ::SourceCodeInfo::Location, :location, 1
-
-  gen_methods! # new fields ignored after this point
-end
-

@@ -38,13 +38,13 @@
 
 
 
-// package google.protobuf;
-// option java_package = "com.google.protobuf";
-// option java_outer_classname = "DescriptorProtos";
+package google.protobuf;
+option java_package = "com.google.protobuf";
+option java_outer_classname = "DescriptorProtos";
 
 // descriptor.proto must be optimized for speed because reflection-based
 // algorithms don't work during bootstrapping.
-// option optimize_for = SPEED;
+option optimize_for = SPEED;
 
 // The protocol compiler can output a FileDescriptorSet containing the .proto
 // files it parses.

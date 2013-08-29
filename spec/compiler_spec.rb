@@ -37,7 +37,7 @@ describe ProtocolBuffers, "compiler" do
     ), :include_dirs => %w(spec/proto_files))
 
 
-    descriptor_set = FileDescriptorSet.parse(protocfile)
+    descriptor_set = Google::Protobuf::FileDescriptorSet.parse(protocfile)
     protocfile.close(true)
 
     Dir.mktmpdir do |dir|

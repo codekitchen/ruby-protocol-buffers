@@ -12,7 +12,7 @@ class CodeGeneratorResponse < ::ProtocolBuffers::Message; end
 class CodeGeneratorRequest < ::ProtocolBuffers::Message
   repeated :string, :file_to_generate, 1
   optional :string, :parameter, 2
-  repeated ::FileDescriptorProto, :proto_file, 15
+  repeated ::Google::Protobuf::FileDescriptorProto, :proto_file, 15
 end
 
 class CodeGeneratorResponse < ::ProtocolBuffers::Message
