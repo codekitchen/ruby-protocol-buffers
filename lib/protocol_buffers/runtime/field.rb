@@ -155,8 +155,10 @@ module ProtocolBuffers
             if __value.nil?
               #{name}.clear
             else
-              #{name}.clear
-              __value.each { |i| @#{name}.push i }
+              unless __value.equal?(#{name})
+                #{name}.clear
+                __value.each { |i| @#{name}.push i }
+              end
             end
           end
         EOF

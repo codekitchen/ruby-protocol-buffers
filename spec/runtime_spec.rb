@@ -681,6 +681,13 @@ describe ProtocolBuffers, "runtime" do
     msg.i.should == 805059
   end
 
+  it "handles if you set a repeated field to itself" do
+    f = Featureful::A.new
+    f.i1 = [1, 2, 3]
+    f.i1 = f.i1
+    f.i1.should =~ [1, 2, 3]
+  end
+
   it "correctly converts to a hash" do
     f = Featureful::A.new
     f.i1 = [1, 2, 3]
