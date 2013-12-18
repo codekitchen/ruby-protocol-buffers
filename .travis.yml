@@ -1,8 +1,4 @@
 language: ruby
-gemfile:
-  - Gemfile
-  # i can't find a way to use the same Gemfile and just specify --without varint
-  - Gemfile.no_varint
 rvm:
   - "1.8.7"
   - "1.9.3"
@@ -12,12 +8,6 @@ rvm:
   - rbx-18mode
   - rbx-19mode
 matrix:
-  exclude:
-    # can't use the varint extension in jruby runs
-    - rvm: jruby-18mode
-      gemfile: Gemfile
-    - rvm: jruby-19mode
-      gemfile: Gemfile
   allow_failures:
     # https://github.com/rubinius/rubinius/issues/2215
     - rvm: rbx-19mode
