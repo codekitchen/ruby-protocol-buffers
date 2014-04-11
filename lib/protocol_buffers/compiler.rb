@@ -34,19 +34,6 @@ module ProtocolBuffers
       true
     end
 
-    # Copied from http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
-    def self.which(cmd)
-      return cmd if File.executable?(cmd)
-      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
-        exts.each do |ext|
-          exe = File.join(path, "#{cmd}#{ext}")
-          return exe if File.executable?(exe)
-        end
-      end
-      return nil
-    end
-
     def self.compile_and_load(input_files, opts = {})
       require 'tempfile'
       require 'protocol_buffers/compiler/file_descriptor_to_ruby'
@@ -85,10 +72,24 @@ module ProtocolBuffers
     end
 
     def self.available?
-      version = `protoc --version`.match(/[\d\.]+/)
+      version = `#{@@protoc_cmd} --version`.match(/[\d\.]+/)
       version && version[0] >= "2.2"
     rescue Errno::ENOENT
       false
     end
+
+    # Copied from http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
+    def self.which(cmd)
+      return cmd if File.executable?(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each do |ext|
+          exe = File.join(path, "#{cmd}#{ext}")
+          return exe if File.executable?(exe)
+        end
+      end
+      return nil
+    end
+
   end
 end
