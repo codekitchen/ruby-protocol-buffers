@@ -616,9 +616,12 @@ Subgroup {
     m.remember_unknown_field(102 << 3 | ProtocolBuffers::WireTypes::FIXED64, "\x01\x02\x03\x04\x05\x06\x07\x08")
     m.remember_unknown_field(103 << 3 | ProtocolBuffers::WireTypes::LENGTH_DELIMITED, "str")
 
-    group = ProtocolBuffers::Message.new
+    klass = Class.new
+    klass.send :include, ProtocolBuffers::Message
+
+    group = klass.new
     group.remember_unknown_field(1 << 3 | ProtocolBuffers::WireTypes::VARINT, 1)
-    subgroup = ProtocolBuffers::Message.new
+    subgroup = klass.new
     subgroup.remember_unknown_field(1 << 3 | ProtocolBuffers::WireTypes::VARINT, 1)
     group.remember_unknown_field(2 << 3 | ProtocolBuffers::WireTypes::START_GROUP, subgroup)
     m.remember_unknown_field(104 << 3 | ProtocolBuffers::WireTypes::START_GROUP, group)

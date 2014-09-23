@@ -5,9 +5,13 @@ require 'protocol_buffers'
 
 module Packed
   # forward declarations
-  class Test < ::ProtocolBuffers::Message; end
+  class Test
+    include ProtocolBuffers::Message
+  end
 
-  class Test < ::ProtocolBuffers::Message
+  class Test
+    include ProtocolBuffers::Message
+
     # forward declarations
 
     # enums

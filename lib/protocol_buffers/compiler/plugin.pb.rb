@@ -6,21 +6,31 @@ require 'protocol_buffers'
 begin; require 'descriptor.pb'; rescue LoadError; end
 
 # forward declarations
-class CodeGeneratorRequest < ::ProtocolBuffers::Message; end
-class CodeGeneratorResponse < ::ProtocolBuffers::Message; end
+class CodeGeneratorRequest
+  include ProtocolBuffers::Message
+end
+class CodeGeneratorResponse
+  include ProtocolBuffers::Message
+end
 
-class CodeGeneratorRequest < ::ProtocolBuffers::Message
+class CodeGeneratorRequest
+  include ProtocolBuffers::Message
+
   repeated :string, :file_to_generate, 1
   optional :string, :parameter, 2
   repeated ::Google::Protobuf::FileDescriptorProto, :proto_file, 15
 end
 
-class CodeGeneratorResponse < ::ProtocolBuffers::Message
+class CodeGeneratorResponse
+  include ProtocolBuffers::Message
+
   # forward declarations
-  class File < ::ProtocolBuffers::Message; end
+  class File
+    include ProtocolBuffers::Message
+  end
 
   # nested messages
-  class File < ::ProtocolBuffers::Message
+  class File
     optional :string, :name, 1
     optional :string, :insertion_point, 2
     optional :string, :content, 15

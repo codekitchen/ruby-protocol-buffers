@@ -56,7 +56,9 @@ HEADER
 
     line %{# forward declarations}
     messages.each do |message|
-      line %{class #{name([@package_modules, message.name].flatten)} < ::ProtocolBuffers::Message; end}
+      line %{class #{name([@package_modules, message.name].flatten)}
+  include ProtocolBuffers::Message
+; end}
     end
 
     if enums.empty?
@@ -124,7 +126,9 @@ HEADER
   }
 
   def dump_message(package, message)
-    in_namespace("class", message.name, " < ::ProtocolBuffers::Message") do
+    in_namespace("class", message.name, "
+  include ProtocolBuffers::Message
+") do
       fully_qualified_name = fully_qualified_name(package, message.name)
       declare(fully_qualified_name, message.nested_type, message.enum_type)
 
@@ -171,7 +175,7 @@ HEADER
   end
 
   def dump_service(package, service)
-    in_namespace("class", service.name, " < ::ProtocolBuffers::Service") do
+    in_namespace("class", service.name, "\n include ProtocolBuffers::Service\n") do
       fully_qualified_name = fully_qualified_name(package, service.name)
       line %{set_fully_qualified_name "#{fully_qualified_name}"}
       line

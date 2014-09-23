@@ -226,7 +226,112 @@ module ProtocolBuffers
   #
   # Protocol Buffer service (RPC) definitions are ignored.
 
-  class Message
+  module Message
+    module ClassMethods
+      def set_fully_qualified_name(name)
+        @fully_qualified_name = name.dup.freeze
+      end
+
+      def fully_qualified_name
+        @fully_qualified_name
+      end
+
+      def validate!(message)
+        valid?(message, true)
+      end
+
+      def valid?(message, raise_exception=false)
+        return true unless @has_required_field
+
+        fields.each do |tag, field|
+          next if field.otype != :required
+          next if message.value_for_tag?(tag) && (field.class != Field::MessageField || message.value_for_tag(tag).valid?)
+          return false unless raise_exception
+          raise(ProtocolBuffers::EncodeError.new(field), "Required field '#{field.name}' is invalid")
+        end
+
+        true
+      end
+
+      # left in for compatibility with previously created .pb.rb files -- no longer used
+      def gen_methods! # :NODOC:
+        @methods_generated = true
+      end
+
+      def to_hash(message)
+        return nil if message == nil
+        return message.is_a?(String) ? message.dup : message unless message.is_a?(::ProtocolBuffers::Message)
+        message.fields.select do |tag, field|
+          message.value_for_tag?(tag)
+        end.inject(Hash.new) do |hash, (tag, field)|
+          value = message.value_for_tag(tag)
+          hash[field.name] = value.is_a?(::ProtocolBuffers::RepeatedField) ? value.map { |elem| to_hash(elem) } : to_hash(value)
+          hash
+        end
+      end
+
+      # Shortcut, simply calls self.new.parse(io)
+      def parse(io)
+        self.new.parse(io)
+      end
+
+      # Shortcut, simply calls self.new.parse_from_text(text)
+      def parse_from_text(text)
+        self.new.parse_from_text(text)
+      end
+
+      # Returns a hash of { tag => ProtocolBuffers::Field }
+      def fields
+        @fields || @fields = {}
+      end
+
+      def initial_set_fields
+        @set_fields ||= []
+      end
+
+      # Find the field for the given attribute name. Returns a
+      # ProtocolBuffers::field
+      def field_for_name(name)
+        name = name.to_sym
+        field = fields.find { |tag,field| field.name == name }
+        field && field.last
+      end
+
+      # Equivalent to fields[tag]
+      def field_for_tag(tag)
+        fields[tag]
+      end
+
+      def define_field(otype, type, name, tag, opts = {}) # :NODOC:
+        type = type.is_a?(Module) ? type : type.to_sym
+        name = name.to_sym
+        tag  = tag.to_i
+        raise("Field already exists for tag: #{tag}") if fields[tag]
+        field = Field.create(self, otype, type, name, tag, opts)
+        fields[tag] = field
+        field.add_methods_to(self)
+      end
+
+      def required(type, name, tag, opts = {}) # :NODOC:
+        define_field(:required, type, name, tag, opts)
+        @has_required_field = true
+      end
+
+      def optional(type, name, tag, opts = {}) # :NODOC:
+        define_field(:optional, type, name, tag, opts)
+      end
+
+      def repeated(type, name, tag, opts = {}) # :NODOC:
+        define_field(:repeated, type, name, tag, opts)
+      end
+    end
+
+    #  Define class-level methods.
+    #
+    def self.included(base)
+      base.send :extend, ClassMethods
+    end
+
     # Create a new Message of this class.
     #
     #   message = MyMessageClass.new(attributes)
@@ -276,18 +381,6 @@ module ProtocolBuffers
       self.class.to_hash(self)
     end
 
-    def self.to_hash(message)
-      return nil if message == nil
-      return message.is_a?(String) ? message.dup : message unless message.is_a?(::ProtocolBuffers::Message)
-      message.fields.select do |tag, field|
-        message.value_for_tag?(tag)
-      end.inject(Hash.new) do |hash, (tag, field)|
-        value = message.value_for_tag(tag)
-        hash[field.name] = value.is_a?(::ProtocolBuffers::RepeatedField) ? value.map { |elem| to_hash(elem) } : to_hash(value)
-        hash
-      end
-    end
-
     # Parse a Message of this class from the given IO/String. Since Protocol
     # Buffers are not length delimited, this will read until the end of the
     # stream.
@@ -306,22 +399,12 @@ module ProtocolBuffers
       return self
     end
 
-    # Shortcut, simply calls self.new.parse(io)
-    def self.parse(io)
-      self.new.parse(io)
-    end
-
     # Parse the text as a text representation of this class, and merge the parsed fields
     # into the current message.
     def parse_from_text(text)
       parser = TextParser.new
       parser.parse_text(text, self)
       return self
-    end
-
-    # Shortcut, simply calls self.new.parse_from_text(text)
-    def self.parse_from_text(text)
-      self.new.parse_from_text(text)
     end
 
     # Merge the attribute values from +obj+ into this Message, which must be of
@@ -406,30 +489,8 @@ module ProtocolBuffers
     end
 
     # Returns a hash of { tag => ProtocolBuffers::Field }
-    def self.fields
-      @fields || @fields = {}
-    end
-
-    def self.initial_set_fields
-      @set_fields ||= []
-    end
-
-    # Returns a hash of { tag => ProtocolBuffers::Field }
     def fields
       self.class.fields
-    end
-
-    # Find the field for the given attribute name. Returns a
-    # ProtocolBuffers::field
-    def self.field_for_name(name)
-      name = name.to_sym
-      field = fields.find { |tag,field| field.name == name }
-      field && field.last
-    end
-
-    # Equivalent to fields[tag]
-    def self.field_for_tag(tag)
-      fields[tag]
     end
 
     # Reflection: get the attribute value for the given tag id.
@@ -517,28 +578,7 @@ module ProtocolBuffers
       end
     end
 
-    def self.define_field(otype, type, name, tag, opts = {}) # :NODOC:
-      type = type.is_a?(Module) ? type : type.to_sym
-      name = name.to_sym
-      tag  = tag.to_i
-      raise("Field already exists for tag: #{tag}") if fields[tag]
-      field = Field.create(self, otype, type, name, tag, opts)
-      fields[tag] = field
-      field.add_methods_to(self)
-    end
-
-    def self.required(type, name, tag, opts = {}) # :NODOC:
-      define_field(:required, type, name, tag, opts)
-      @has_required_field = true
-    end
-
-    def self.optional(type, name, tag, opts = {}) # :NODOC:
-      define_field(:optional, type, name, tag, opts)
-    end
-
-    def self.repeated(type, name, tag, opts = {}) # :NODOC:
-      define_field(:repeated, type, name, tag, opts)
-    end
+    
 
     def notify_on_change(parent, tag)
       @parent_for_notify = parent
@@ -553,14 +593,6 @@ module ProtocolBuffers
       end
     end
 
-    def self.set_fully_qualified_name(name)
-      @fully_qualified_name = name.dup.freeze
-    end
-
-    def self.fully_qualified_name
-      @fully_qualified_name
-    end
-
     def fully_qualified_name
       self.class.fully_qualified_name
     end
@@ -569,25 +601,8 @@ module ProtocolBuffers
       self.class.valid?(self)
     end
 
-    def self.valid?(message, raise_exception=false)
-      return true unless @has_required_field
-
-      fields.each do |tag, field|
-        next if field.otype != :required
-        next if message.value_for_tag?(tag) && (field.class != Field::MessageField || message.value_for_tag(tag).valid?)
-        return false unless raise_exception
-        raise(ProtocolBuffers::EncodeError.new(field), "Required field '#{field.name}' is invalid")
-      end
-
-      true
-    end
-
     def validate!
       self.class.validate!(self)
-    end
-
-    def self.validate!(message)
-      valid?(message, true)
     end
 
     def remember_unknown_field(tag_int, value)
@@ -603,11 +618,6 @@ module ProtocolBuffers
 
     def unknown_field_count
       (@unknown_fields || []).size
-    end
-
-    # left in for compatibility with previously created .pb.rb files -- no longer used
-    def self.gen_methods! # :NODOC:
-      @methods_generated = true
     end
 
     protected

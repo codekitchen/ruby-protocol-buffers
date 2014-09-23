@@ -6,31 +6,69 @@ require 'protocol_buffers'
 module Google
   module Protobuf
     # forward declarations
-    class FileDescriptorSet < ::ProtocolBuffers::Message; end
-    class FileDescriptorProto < ::ProtocolBuffers::Message; end
-    class DescriptorProto < ::ProtocolBuffers::Message; end
-    class FieldDescriptorProto < ::ProtocolBuffers::Message; end
-    class EnumDescriptorProto < ::ProtocolBuffers::Message; end
-    class EnumValueDescriptorProto < ::ProtocolBuffers::Message; end
-    class ServiceDescriptorProto < ::ProtocolBuffers::Message; end
-    class MethodDescriptorProto < ::ProtocolBuffers::Message; end
-    class FileOptions < ::ProtocolBuffers::Message; end
-    class MessageOptions < ::ProtocolBuffers::Message; end
-    class FieldOptions < ::ProtocolBuffers::Message; end
-    class EnumOptions < ::ProtocolBuffers::Message; end
-    class EnumValueOptions < ::ProtocolBuffers::Message; end
-    class ServiceOptions < ::ProtocolBuffers::Message; end
-    class MethodOptions < ::ProtocolBuffers::Message; end
-    class UninterpretedOption < ::ProtocolBuffers::Message; end
-    class SourceCodeInfo < ::ProtocolBuffers::Message; end
+    class FileDescriptorSet
+      include ProtocolBuffers::Message
+    end
+    class FileDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class DescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class FieldDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class EnumDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class EnumValueDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class ServiceDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class MethodDescriptorProto
+      include ProtocolBuffers::Message
+    end
+    class FileOptions
+      include ProtocolBuffers::Message
+    end
+    class MessageOptions
+      include ProtocolBuffers::Message
+    end
+    class FieldOptions
+      include ProtocolBuffers::Message
+    end
+    class EnumOptions
+      include ProtocolBuffers::Message
+    end
+    class EnumValueOptions
+      include ProtocolBuffers::Message
+    end
+    class ServiceOptions
+      include ProtocolBuffers::Message
+    end
+    class MethodOptions
+      include ProtocolBuffers::Message
+    end
+    class UninterpretedOption
+      include ProtocolBuffers::Message
+    end
+    class SourceCodeInfo
+      include ProtocolBuffers::Message
+    end
 
-    class FileDescriptorSet < ::ProtocolBuffers::Message
+    class FileDescriptorSet
+     include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.FileDescriptorSet"
 
       repeated ::Google::Protobuf::FileDescriptorProto, :file, 1
     end
 
-    class FileDescriptorProto < ::ProtocolBuffers::Message
+    class FileDescriptorProto
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.FileDescriptorProto"
 
       optional :string, :name, 1
@@ -46,14 +84,20 @@ module Google
       optional ::Google::Protobuf::SourceCodeInfo, :source_code_info, 9
     end
 
-    class DescriptorProto < ::ProtocolBuffers::Message
+    class DescriptorProto
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class ExtensionRange < ::ProtocolBuffers::Message; end
+      class ExtensionRange
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "google.protobuf.DescriptorProto"
 
       # nested messages
-      class ExtensionRange < ::ProtocolBuffers::Message
+      class ExtensionRange
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "google.protobuf.DescriptorProto.ExtensionRange"
 
         optional :int32, :start, 1
@@ -69,7 +113,9 @@ module Google
       optional ::Google::Protobuf::MessageOptions, :options, 7
     end
 
-    class FieldDescriptorProto < ::ProtocolBuffers::Message
+    class FieldDescriptorProto
+      include ProtocolBuffers::Message
+
       # forward declarations
 
       # enums
@@ -120,7 +166,9 @@ module Google
       optional ::Google::Protobuf::FieldOptions, :options, 8
     end
 
-    class EnumDescriptorProto < ::ProtocolBuffers::Message
+    class EnumDescriptorProto
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.EnumDescriptorProto"
 
       optional :string, :name, 1
@@ -128,7 +176,9 @@ module Google
       optional ::Google::Protobuf::EnumOptions, :options, 3
     end
 
-    class EnumValueDescriptorProto < ::ProtocolBuffers::Message
+    class EnumValueDescriptorProto
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.EnumValueDescriptorProto"
 
       optional :string, :name, 1
@@ -136,7 +186,9 @@ module Google
       optional ::Google::Protobuf::EnumValueOptions, :options, 3
     end
 
-    class ServiceDescriptorProto < ::ProtocolBuffers::Message
+    class ServiceDescriptorProto
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.ServiceDescriptorProto"
 
       optional :string, :name, 1
@@ -144,7 +196,9 @@ module Google
       optional ::Google::Protobuf::ServiceOptions, :options, 3
     end
 
-    class MethodDescriptorProto < ::ProtocolBuffers::Message
+    class MethodDescriptorProto
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.MethodDescriptorProto"
 
       optional :string, :name, 1
@@ -153,7 +207,9 @@ module Google
       optional ::Google::Protobuf::MethodOptions, :options, 4
     end
 
-    class FileOptions < ::ProtocolBuffers::Message
+    class FileOptions
+      include ProtocolBuffers::Message
+
       # forward declarations
 
       # enums
@@ -181,7 +237,9 @@ module Google
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class MessageOptions < ::ProtocolBuffers::Message
+    class MessageOptions
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.MessageOptions"
 
       optional :bool, :message_set_wire_format, 1, :default => false
@@ -189,7 +247,9 @@ module Google
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class FieldOptions < ::ProtocolBuffers::Message
+    class FieldOptions
+      include ProtocolBuffers::Message
+
       # forward declarations
 
       # enums
@@ -214,39 +274,53 @@ module Google
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class EnumOptions < ::ProtocolBuffers::Message
+    class EnumOptions
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.EnumOptions"
 
       optional :bool, :allow_alias, 2, :default => true
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class EnumValueOptions < ::ProtocolBuffers::Message
+    class EnumValueOptions
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.EnumValueOptions"
 
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class ServiceOptions < ::ProtocolBuffers::Message
+    class ServiceOptions
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.ServiceOptions"
 
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class MethodOptions < ::ProtocolBuffers::Message
+    class MethodOptions
+      include ProtocolBuffers::Message
+
       set_fully_qualified_name "google.protobuf.MethodOptions"
 
       repeated ::Google::Protobuf::UninterpretedOption, :uninterpreted_option, 999
     end
 
-    class UninterpretedOption < ::ProtocolBuffers::Message
+    class UninterpretedOption
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class NamePart < ::ProtocolBuffers::Message; end
+      class NamePart
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "google.protobuf.UninterpretedOption"
 
       # nested messages
-      class NamePart < ::ProtocolBuffers::Message
+      class NamePart
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "google.protobuf.UninterpretedOption.NamePart"
 
         required :string, :name_part, 1
@@ -262,14 +336,20 @@ module Google
       optional :string, :aggregate_value, 8
     end
 
-    class SourceCodeInfo < ::ProtocolBuffers::Message
+    class SourceCodeInfo
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class Location < ::ProtocolBuffers::Message; end
+      class Location
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "google.protobuf.SourceCodeInfo"
 
       # nested messages
-      class Location < ::ProtocolBuffers::Message
+      class Location
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "google.protobuf.SourceCodeInfo.Location"
 
         repeated :int32, :path, 1, :packed => true 

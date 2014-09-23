@@ -7,17 +7,23 @@ SimpleCov.start
 require 'protocol_buffers'
 
 # These are a couple of classes used by tests
-class SignedIntTest < ::ProtocolBuffers::Message
+class SignedIntTest
+  include ProtocolBuffers::Message
+
   required :int32, :test_member, 1
   gen_methods! # new fields ignored after this point
 end
 
-class StringTest < ::ProtocolBuffers::Message
+class StringTest
+  include ProtocolBuffers::Message
+
   optional :string, :test_member, 1
   gen_methods! # new fields ignored after this point
 end
 
-class NilTest < ::ProtocolBuffers::Message
+class NilTest
+  include ProtocolBuffers::Message
+
   optional :string, :test_field_1, 1
   optional :string, :test_field_2, 2
   gen_methods! # new fields ignored after this point

@@ -5,13 +5,27 @@ require 'protocol_buffers'
 
 module Featureful
   # forward declarations
-  class A < ::ProtocolBuffers::Message; end
-  class B < ::ProtocolBuffers::Message; end
-  class ABitOfEverything < ::ProtocolBuffers::Message; end
-  class C < ::ProtocolBuffers::Message; end
-  class D < ::ProtocolBuffers::Message; end
-  class E < ::ProtocolBuffers::Message; end
-  class F < ::ProtocolBuffers::Message; end
+  class A
+    include ProtocolBuffers::Message
+  end
+  class B
+    include ProtocolBuffers::Message
+  end
+  class ABitOfEverything
+    include ProtocolBuffers::Message
+  end
+  class C
+    include ProtocolBuffers::Message
+  end
+  class D
+    include ProtocolBuffers::Message
+  end
+  class E
+    include ProtocolBuffers::Message
+  end
+  class F
+    include ProtocolBuffers::Message
+  end
 
   # enums
   module MainPayloads
@@ -24,19 +38,33 @@ module Featureful
     P3 = 4
   end
 
-  class A < ::ProtocolBuffers::Message
+  class A
+    include ProtocolBuffers::Message
+
     # forward declarations
-    class Sub < ::ProtocolBuffers::Message; end
-    class Group1 < ::ProtocolBuffers::Message; end
-    class Group2 < ::ProtocolBuffers::Message; end
-    class Group3 < ::ProtocolBuffers::Message; end
+    class Sub
+      include ProtocolBuffers::Message
+    end
+    class Group1
+      include ProtocolBuffers::Message
+    end
+    class Group2
+      include ProtocolBuffers::Message
+    end
+    class Group3
+      include ProtocolBuffers::Message
+    end
 
     set_fully_qualified_name "featureful.A"
 
     # nested messages
-    class Sub < ::ProtocolBuffers::Message
+    class Sub
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class SubSub < ::ProtocolBuffers::Message; end
+      class SubSub
+        include ProtocolBuffers::Message
+      end
 
       # enums
       module Payloads
@@ -51,7 +79,9 @@ module Featureful
       set_fully_qualified_name "featureful.A.Sub"
 
       # nested messages
-      class SubSub < ::ProtocolBuffers::Message
+      class SubSub
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "featureful.A.Sub.SubSub"
 
         optional :string, :subsub_payload, 1
@@ -62,14 +92,20 @@ module Featureful
       optional ::Featureful::A::Sub::SubSub, :subsub1, 3
     end
 
-    class Group1 < ::ProtocolBuffers::Message
+    class Group1
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class Subgroup < ::ProtocolBuffers::Message; end
+      class Subgroup
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "featureful.A.Group1"
 
       # nested messages
-      class Subgroup < ::ProtocolBuffers::Message
+      class Subgroup
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "featureful.A.Group1.Subgroup"
 
         required :int32, :i1, 1
@@ -79,14 +115,20 @@ module Featureful
       repeated ::Featureful::A::Group1::Subgroup, :subgroup, 2, :group => true
     end
 
-    class Group2 < ::ProtocolBuffers::Message
+    class Group2
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class Subgroup < ::ProtocolBuffers::Message; end
+      class Subgroup
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "featureful.A.Group2"
 
       # nested messages
-      class Subgroup < ::ProtocolBuffers::Message
+      class Subgroup
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "featureful.A.Group2.Subgroup"
 
         required :int32, :i1, 1
@@ -96,14 +138,20 @@ module Featureful
       repeated ::Featureful::A::Group2::Subgroup, :subgroup, 2, :group => true
     end
 
-    class Group3 < ::ProtocolBuffers::Message
+    class Group3
+      include ProtocolBuffers::Message
+
       # forward declarations
-      class Subgroup < ::ProtocolBuffers::Message; end
+      class Subgroup
+        include ProtocolBuffers::Message
+      end
 
       set_fully_qualified_name "featureful.A.Group3"
 
       # nested messages
-      class Subgroup < ::ProtocolBuffers::Message
+      class Subgroup
+        include ProtocolBuffers::Message
+
         set_fully_qualified_name "featureful.A.Group3.Subgroup"
 
         required :int32, :i1, 1
@@ -124,13 +172,17 @@ module Featureful
     required ::Featureful::A::Group3, :group3, 9, :group => true
   end
 
-  class B < ::ProtocolBuffers::Message
+  class B
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.B"
 
     repeated ::Featureful::A, :a, 1
   end
 
-  class ABitOfEverything < ::ProtocolBuffers::Message
+  class ABitOfEverything
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.ABitOfEverything"
 
     optional :double, :double_field, 1
@@ -150,27 +202,35 @@ module Featureful
     optional :bytes, :bytes_field, 15
   end
 
-  class C < ::ProtocolBuffers::Message
+  class C
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.C"
 
     optional ::Featureful::D, :d, 1
     repeated ::Featureful::E, :e, 2
   end
 
-  class D < ::ProtocolBuffers::Message
+  class D
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.D"
 
     repeated ::Featureful::F, :f, 1
     optional ::Featureful::F, :f2, 2
   end
 
-  class E < ::ProtocolBuffers::Message
+  class E
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.E"
 
     optional ::Featureful::D, :d, 1
   end
 
-  class F < ::ProtocolBuffers::Message
+  class F
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "featureful.F"
 
     optional :string, :s, 1

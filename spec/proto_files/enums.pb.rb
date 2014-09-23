@@ -5,7 +5,9 @@ require 'protocol_buffers'
 
 module Enums
   # forward declarations
-  class FooMessage < ::ProtocolBuffers::Message; end
+  class FooMessage
+    include ProtocolBuffers::Message
+  end
 
   # enums
   module FooEnum
@@ -29,7 +31,9 @@ module Enums
     SIX = 6
   end
 
-  class FooMessage < ::ProtocolBuffers::Message
+  class FooMessage
+    include ProtocolBuffers::Message
+
     # forward declarations
 
     # enums

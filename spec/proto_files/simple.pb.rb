@@ -5,22 +5,34 @@ require 'protocol_buffers'
 
 module Simple
   # forward declarations
-  class Test1 < ::ProtocolBuffers::Message; end
-  class Foo < ::ProtocolBuffers::Message; end
-  class Bar < ::ProtocolBuffers::Message; end
+  class Test1
+    include ProtocolBuffers::Message
+  end
+  class Foo
+    include ProtocolBuffers::Message
+  end
+  class Bar
+    include ProtocolBuffers::Message
+  end
 
-  class Test1 < ::ProtocolBuffers::Message
+  class Test1
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "simple.Test1"
 
     optional :string, :test_field, 1
   end
 
-  class Foo < ::ProtocolBuffers::Message
+  class Foo
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "simple.Foo"
 
   end
 
-  class Bar < ::ProtocolBuffers::Message
+  class Bar
+    include ProtocolBuffers::Message
+
     # purposefully removing qualified name to make sure that nothing breaks
     #set_fully_qualified_name "simple.Bar"
 

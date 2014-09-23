@@ -4,25 +4,34 @@
 require 'protocol_buffers'
 
 # forward declarations
-class A < ::ProtocolBuffers::Message; end
-class C < ::ProtocolBuffers::Message; end
+class A
+  include ProtocolBuffers::Message
+end
+class C
+  include ProtocolBuffers::Message
+end
 
-class A < ::ProtocolBuffers::Message
+class A
+  include ProtocolBuffers::Message
+
   # forward declarations
-  class B < ::ProtocolBuffers::Message; end
+  class B
+    include ProtocolBuffers::Message
+  end
 
   set_fully_qualified_name "A"
 
   # nested messages
-  class B < ::ProtocolBuffers::Message
+  class B
     set_fully_qualified_name "A.B"
-
   end
 
   optional ::A::B, :b, 1
 end
 
-class C < ::ProtocolBuffers::Message
+class C
+  include ProtocolBuffers::Message
+
   # purposefully removing qualified name to make sure that nothing breaks
   #set_fully_qualified_name "C"
 

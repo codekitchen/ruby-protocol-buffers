@@ -5,42 +5,62 @@ require 'protocol_buffers'
 
 module Services
   # forward declarations
-  class FooRequest < ::ProtocolBuffers::Message; end
-  class FooResponse < ::ProtocolBuffers::Message; end
-  class BarRequest < ::ProtocolBuffers::Message; end
-  class BarResponse < ::ProtocolBuffers::Message; end
+  class FooRequest
+    include ProtocolBuffers::Message
+  end
+  class FooResponse
+    include ProtocolBuffers::Message
+  end
+  class BarRequest
+    include ProtocolBuffers::Message
+  end
+  class BarResponse
+    include ProtocolBuffers::Message
+  end
 
-  class FooRequest < ::ProtocolBuffers::Message
+  class FooRequest
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "services.FooRequest"
 
     optional :sint64, :one, 1
   end
 
-  class FooResponse < ::ProtocolBuffers::Message
+  class FooResponse
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "services.FooResponse"
 
     optional :uint64, :two, 1
   end
 
-  class BarRequest < ::ProtocolBuffers::Message
+  class BarRequest
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "services.BarRequest"
 
     optional :string, :three, 1
   end
 
-  class BarResponse < ::ProtocolBuffers::Message
+  class BarResponse
+    include ProtocolBuffers::Message
+
     set_fully_qualified_name "services.BarResponse"
 
     optional :bytes, :four, 1
   end
 
-  class FooBarService < ::ProtocolBuffers::Service
+  class FooBarService
+    include ProtocolBuffers::Service
+
     set_fully_qualified_name "services.FooBarService"
 
     rpc :get_foo, "GetFoo", ::Services::FooRequest, ::Services::FooResponse
     rpc :get_bar, "GetBar", ::Services::BarRequest, ::Services::BarResponse
   end
-  class NoNameFooBarService < ::ProtocolBuffers::Service
+  class NoNameFooBarService
+    include ProtocolBuffers::Service
+
     # purposefully removing qualified name to make sure that nothing breaks
     #set_fully_qualified_name "services.NoNameFooBarService"
 

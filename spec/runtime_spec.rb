@@ -215,7 +215,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "allows directly recursive sub-messages" do
     module Foo
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         optional :int32, :payload, 1
         optional Foo, :foo, 2
       end
@@ -230,9 +232,13 @@ describe ProtocolBuffers, "runtime" do
 
   it "allows indirectly recursive sub-messages" do
     module Foo
-      class Bar < ProtocolBuffers::Message; end
+      class Bar
+        include ProtocolBuffers::Message
+      end
 
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         optional :int32, :payload, 1
         optional Bar, :bar, 2
       end
@@ -255,7 +261,9 @@ describe ProtocolBuffers, "runtime" do
   it "pretends that repeated fields are arrays" do
     # make sure our RepeatedField class acts like a normal Array
     module Foo
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         repeated :int32, :nums, 1
       end
     end
@@ -294,7 +302,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "does value checking of repeated fields" do
     module Foo
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         repeated :int32, :nums, 1
       end
     end
@@ -309,10 +319,14 @@ describe ProtocolBuffers, "runtime" do
   # correctness
   it "handles singular message fields exactly as in the documentation" do
     module Foo
-      class Bar < ProtocolBuffers::Message
+      class Bar
+        include ProtocolBuffers::Message
+
         optional :int32, :i, 1
       end
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         optional Bar, :bar, 1
       end
     end
@@ -336,7 +350,9 @@ describe ProtocolBuffers, "runtime" do
   # another example from the docs
   it "handles repeated field logic" do
     module Foo
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         repeated :int32, :nums, 1
       end
     end
@@ -376,11 +392,15 @@ describe ProtocolBuffers, "runtime" do
 
   it "can assign any object with an each method to a repeated field" do
     module Foo
-      class Bar < ProtocolBuffers::Message
+      class Bar
+        include ProtocolBuffers::Message
+
         optional :int32, :i, 1
       end
 
-      class Foo < ProtocolBuffers::Message
+      class Foo
+        include ProtocolBuffers::Message
+
         repeated Bar, :nums, 1
       end
     end
@@ -488,7 +508,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "enforces required fields on serialization" do
     module TehUnknown
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         required :string, :field_1, 1
         optional :string, :field_2, 2
       end
@@ -511,7 +533,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "enforces required fields on deserialization" do
     module TehUnknown
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :string, :field_1, 1
         optional :string, :field_2, 2
       end
@@ -522,7 +546,9 @@ describe ProtocolBuffers, "runtime" do
 
     # now make field_1 required
     module TehUnknown2
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         required :string, :field_1, 1
         optional :string, :field_2, 2
       end
@@ -533,7 +559,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "enforces valid values on deserialization" do
     module TehUnknown
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :int64, :field_1, 1
       end
     end
@@ -542,7 +570,9 @@ describe ProtocolBuffers, "runtime" do
     buf = res1.to_s
 
     module TehUnknown2
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :int32, :field_1, 1
       end
     end
@@ -552,7 +582,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "ignores and passes on unknown fields" do
     module TehUnknown
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :int32, :field_1, 1
         optional :int32, :field_2, 2
         optional :int32, :field_3, 3
@@ -566,7 +598,9 @@ describe ProtocolBuffers, "runtime" do
 
     # remove field_2 to pretend we never knew about it
     module TehUnknown2
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :int32, :field_1, 1
         optional :int32, :field_3, 3
       end
@@ -588,7 +622,9 @@ describe ProtocolBuffers, "runtime" do
 
     # now we know about field_2 again
     module TehUnknown3
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         optional :int32, :field_1, 1
         optional :int32, :field_2, 2
         optional :int32, :field_4, 4
@@ -604,7 +640,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "ignores and passes on unknown enum values" do
     module TehUnknown
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         module E
           include ProtocolBuffers::Enum
           V1 = 1
@@ -619,7 +657,9 @@ describe ProtocolBuffers, "runtime" do
 
     # remove field_2 to pretend we never knew about it
     module TehUnknown2
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         module E
           include ProtocolBuffers::Enum
           V1 = 1
@@ -640,7 +680,9 @@ describe ProtocolBuffers, "runtime" do
 
     # now we know about field_2 again
     module TehUnknown3
-      class MyResult < ProtocolBuffers::Message
+      class MyResult
+        include ProtocolBuffers::Message
+
         module E
           include ProtocolBuffers::Enum
           V1 = 1
@@ -672,7 +714,9 @@ describe ProtocolBuffers, "runtime" do
 
   it "should work with IO streams not set to binary" do
     pending("requires encoding support") unless "".respond_to?(:encoding)
-    class IntMsg < ProtocolBuffers::Message
+    class IntMsg
+      include ProtocolBuffers::Message
+
       required :int32, :i, 1
     end
     sio = StringIO.new("\b\xc3\x911")
