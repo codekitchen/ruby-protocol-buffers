@@ -1,16 +1,34 @@
 require 'protocol_buffers/compiler/descriptor.pb'
 
+require 'thread'
+
 module ProtocolBuffers
   class CompileError < StandardError; end
 
   module Compiler
+    @@protoc_cmd = "protoc".freeze
+    @@lock = Mutex.new
+
+    def self.set_protoc_cmd(protoc_cmd)
+      @@lock.synchronize do
+        @@protoc_cmd = protoc_cmd.dup.freeze
+      end
+    end
+
+    def self.reset_protoc_cmd
+      @@lock.synchronize do
+        @@protoc_cmd = "protoc".freeze
+      end
+    end
+
     def self.compile(output_filename, input_files, opts = {})
       input_files = Array(input_files) unless input_files.is_a?(Array)
       raise(ArgumentError, "Need at least one input file") if input_files.empty?
       other_opts = ""
       (opts[:include_dirs] || []).each { |d| other_opts += " -I#{d}" }
 
-      cmd = "protoc #{other_opts} -o#{output_filename} #{input_files.join(' ')}"
+      raise CompileError.new("Could not find protoc executable: #{@@protoc_cmd}") unless which(@@protoc_cmd)
+      cmd = "#{@@protoc_cmd} #{other_opts} -o#{output_filename} #{input_files.join(' ')}"
       rc = system(cmd)
       raise(CompileError, $?.exitstatus.to_s) unless rc
       true
@@ -54,10 +72,24 @@ module ProtocolBuffers
     end
 
     def self.available?
-      version = `protoc --version`.match(/[\d\.]+/)
+      version = `#{@@protoc_cmd} --version`.match(/[\d\.]+/)
       version && version[0] >= "2.2"
     rescue Errno::ENOENT
       false
     end
+
+    # Copied from http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
+    def self.which(cmd)
+      return cmd if File.executable?(cmd)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each do |ext|
+          exe = File.join(path, "#{cmd}#{ext}")
+          return exe if File.executable?(exe)
+        end
+      end
+      return nil
+    end
+
   end
 end

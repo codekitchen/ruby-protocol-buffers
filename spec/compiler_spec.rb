@@ -73,4 +73,26 @@ describe ProtocolBuffers, "compiler" do
       File.join(File.dirname(__FILE__), "proto_files", "featureful.proto"))
   end
 
+  it "correctly throws an error when protoc cannot be found" do
+    protoc_cmd = "garbageadsvasdv"
+    ProtocolBuffers::Compiler.set_protoc_cmd(protoc_cmd)
+
+    protocfile = Tempfile.new("protocol_buffers_spec_cmd_test")
+    protocfile.binmode
+    expect do
+      ProtocolBuffers::Compiler.compile(protocfile.path, %w(spec/proto_files/simple.proto))
+    end.to raise_error(ProtocolBuffers::CompileError, /Could not find protoc executable: #{protoc_cmd}/)
+
+    ProtocolBuffers::Compiler.reset_protoc_cmd
+  end
+
+  it "correctly throws an error that is not when protoc cannot be found" do
+    protocfile = Tempfile.new("protocol_buffers_spec_cmd_test2")
+    protocfile.binmode
+
+    expect do
+      # simple2.proto does not exist
+      ProtocolBuffers::Compiler.compile(protocfile.path, %w(spec/proto_files/simple2.proto))
+    end.to raise_error(ProtocolBuffers::CompileError, /^[0-9]+/)
+  end
 end
