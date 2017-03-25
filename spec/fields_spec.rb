@@ -48,10 +48,6 @@ describe ProtocolBuffers, "fields" do
         @bad_utf    = "\xc2"
         @good_ascii = "!hola!".force_encoding("us-ascii")
 
-        @good_utf_io   = proc { StringIO.new(@good_utf) }
-        @bad_utf_io    = proc { StringIO.new(@bad_utf) }
-        @good_ascii_io = proc { StringIO.new(@good_ascii) }
-
         @s = mkfield(:StringField)
         @b = mkfield(:BytesField)
       end
@@ -69,28 +65,28 @@ describe ProtocolBuffers, "fields" do
         end
 
         it "forces UTF-8 on deserializing" do
-          @s.deserialize(@good_utf_io[]).encoding.should == Encoding::UTF_8
-          proc { @s.check_valid(@s.deserialize(@good_utf_io[])) }.should_not raise_error()
+          @s.deserialize(@good_utf).encoding.should == Encoding::UTF_8
+          proc { @s.check_valid(@s.deserialize(@good_utf)) }.should_not raise_error()
 
-          @s.deserialize(@good_ascii_io[]).encoding.should == Encoding::UTF_8
-          proc { @s.check_valid(@s.deserialize(@good_ascii_io[])) }.should_not raise_error()
+          @s.deserialize(@good_ascii).encoding.should == Encoding::UTF_8
+          proc { @s.check_valid(@s.deserialize(@good_ascii)) }.should_not raise_error()
 
-          @s.deserialize(@bad_utf_io[]).encoding.should == Encoding::UTF_8
-          proc { @s.check_valid(@s.deserialize(@bad_utf_io[])) }.should raise_error(ArgumentError)
+          @s.deserialize(@bad_utf).encoding.should == Encoding::UTF_8
+          proc { @s.check_valid(@s.deserialize(@bad_utf)) }.should raise_error(ArgumentError)
         end
       end
 
       context "byte fields" do
 
         it "does not force UTF-8 on deserializing" do
-          @b.deserialize(@good_utf_io[]).encoding.should == Encoding::BINARY
-          proc { @b.check_valid(@b.deserialize(@good_utf_io[])) }.should_not raise_error()
+          @b.deserialize(@good_utf).encoding.should == Encoding::BINARY
+          proc { @b.check_valid(@b.deserialize(@good_utf)) }.should_not raise_error()
 
-          @b.deserialize(@good_ascii_io[]).encoding.should == Encoding.find("us-ascii")
-          proc { @b.check_valid(@b.deserialize(@good_ascii_io[])) }.should_not raise_error()
+          @b.deserialize(@good_ascii).encoding.should == Encoding.find("us-ascii")
+          proc { @b.check_valid(@b.deserialize(@good_ascii)) }.should_not raise_error()
 
-          @b.deserialize(@bad_utf_io[]).encoding.should == Encoding::BINARY
-          proc { @b.check_valid(@b.deserialize(@bad_utf_io[])) }.should_not raise_error()
+          @b.deserialize(@bad_utf).encoding.should == Encoding::BINARY
+          proc { @b.check_valid(@b.deserialize(@bad_utf)) }.should_not raise_error()
         end
       end
     end

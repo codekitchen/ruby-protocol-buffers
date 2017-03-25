@@ -1,7 +1,6 @@
 require 'protocol_buffers'
 require 'protocol_buffers/runtime/enum'
 require 'protocol_buffers/runtime/varint'
-require 'protocol_buffers/limited_io'
 
 module ProtocolBuffers
 
@@ -306,7 +305,7 @@ module ProtocolBuffers
       end
 
       def deserialize(value)
-        value.read
+        value
       end
 
       def text_format(io, value, options = nil)
@@ -334,11 +333,10 @@ module ProtocolBuffers
       end
 
       def deserialize(value)
-        read_value = value.read.to_s
         if HAS_ENCODING
-          read_value.force_encoding(Encoding::UTF_8)
+          value.dup.force_encoding(Encoding::UTF_8)
         else
-          read_value
+          value
         end
       end
 
