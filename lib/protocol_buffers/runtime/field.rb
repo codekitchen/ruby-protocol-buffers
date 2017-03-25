@@ -96,8 +96,9 @@ module ProtocolBuffers
   class Field # :nodoc: all
     attr_reader :otype, :name, :tag
 
-    def repeated?; otype == :repeated end
-    def packed?; repeated? && @opts[:packed] end
+    def repeated?; @repeated; end
+    def packed?; @packed; end
+    def required?; @required; end
 
     def self.create(sender, otype, type, name, tag, opts = {})
       if type.is_a?(Symbol)
@@ -123,6 +124,9 @@ module ProtocolBuffers
       @name = name
       @tag = tag
       @opts = opts.dup
+      @repeated = otype == :repeated
+      @required = otype == :required
+      @packed = @repeated && opts[:packed]
     end
 
     def add_reader_to(klass)
